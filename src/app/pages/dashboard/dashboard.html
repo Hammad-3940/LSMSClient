@@ -1,0 +1,285 @@
+<div class="row g-2 mb-3">
+
+  <div class="col-12 col-sm-6 col-xl-3">
+    <div class="stat-card a-total">
+      <div class="stat-top">
+        <div class="stat-chip"><i class="ti ti-list-numbers"></i></div>
+        <span class="stat-trend up"><i class="ti ti-trending-up"></i> +12</span>
+      </div>
+      <div class="stat-label">Total animals</div>
+      <div class="stat-value">248</div>
+      <div class="stat-note">Across all pens this month</div>
+    </div>
+  </div>
+
+  <div class="col-12 col-sm-6 col-xl-3">
+    <div class="stat-card a-sale">
+      <div class="stat-top">
+        <div class="stat-chip"><i class="ti ti-tag"></i></div>
+        <span class="stat-trend">Market</span>
+      </div>
+      <div class="stat-label">For sale</div>
+      <div class="stat-value">34</div>
+      <div class="stat-note">Currently listed for market</div>
+    </div>
+  </div>
+
+  <div class="col-12 col-sm-6 col-xl-3">
+    <div class="stat-card a-active">
+      <div class="stat-top">
+        <div class="stat-chip"><i class="ti ti-circle-check"></i></div>
+        <span class="stat-trend up"><i class="ti ti-heart"></i> Healthy</span>
+      </div>
+      <div class="stat-label">Active &amp; healthy</div>
+      <div class="stat-value">201</div>
+      <div class="stat-note">81% of herd</div>
+    </div>
+  </div>
+
+  <div class="col-12 col-sm-6 col-xl-3">
+    <div class="stat-card a-death">
+      <div class="stat-top">
+        <div class="stat-chip"><i class="ti ti-activity-heartbeat"></i></div>
+        <span class="stat-trend down"><i class="ti ti-trending-down"></i> +2</span>
+      </div>
+      <div class="stat-label">Deaths</div>
+      <div class="stat-value">13</div>
+      <div class="stat-note">Recorded this month</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── Animal table panel ── -->
+<section class="panel">
+
+  <div class="panel-head">
+    <div class="panel-title">
+      Animal list <span class="count">(8)</span>
+    </div>
+    <div class="panel-tools">
+      <div class="search">
+        <i class="ti ti-search"></i>
+        <input placeholder="Search name, ID or species…">
+      </div>
+      <button class="filter active">All</button>
+      <button class="filter">Active</button>
+      <button class="filter">For sale</button>
+      <button class="filter">Sick</button>
+    </div>
+  </div>
+
+  <div class="table-scroll">
+    <table class="lp">
+      <thead>
+        <tr>
+          <th style="width:26%">Animal</th>
+          <th style="width:13%">Species</th>
+          <th style="width:9%">Age</th>
+          <th style="width:12%">Weight</th>
+          <th style="width:14%">Status</th>
+          <th style="width:13%">Location</th>
+          <th style="width:13%"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div class="animal-cell">
+              <div class="animal-emoji" style="background:#d4f3dd">🐄</div>
+              <div>
+                <div class="animal-name">Bessie</div>
+                <div class="animal-id">#A-0041</div>
+              </div>
+            </div>
+          </td>
+          <td><span class="species-tag">Cattle</span></td>
+          <td>3 yr</td>
+          <td class="num">420 kg</td>
+          <td><span class="badge-x s-active"><i class="ti ti-circle-check"></i> Active</span></td>
+          <td style="color:var(--muted);font-size:12px">Pen B-2</td>
+          <td>
+            <div class="row-actions">
+              <div class="row-btn"><i class="ti ti-eye"></i></div>
+              <div class="row-btn"><i class="ti ti-edit"></i></div>
+              <div class="row-btn danger"><i class="ti ti-trash"></i></div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="animal-cell">
+              <div class="animal-emoji" style="background:#fdecc8">🐑</div>
+              <div>
+                <div class="animal-name">Woolly</div>
+                <div class="animal-id">#A-0055</div>
+              </div>
+            </div>
+          </td>
+          <td><span class="species-tag">Sheep</span></td>
+          <td>1 yr</td>
+          <td class="num">48 kg</td>
+          <td><span class="badge-x s-sale"><i class="ti ti-tag"></i> For sale</span></td>
+          <td style="color:var(--muted);font-size:12px">Pen S-1</td>
+          <td>
+            <div class="row-actions">
+              <div class="row-btn"><i class="ti ti-eye"></i></div>
+              <div class="row-btn"><i class="ti ti-edit"></i></div>
+              <div class="row-btn danger"><i class="ti ti-trash"></i></div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="animal-cell">
+              <div class="animal-emoji" style="background:#dbeafe">🐐</div>
+              <div>
+                <div class="animal-name">Clover</div>
+                <div class="animal-id">#A-0062</div>
+              </div>
+            </div>
+          </td>
+          <td><span class="species-tag">Goat</span></td>
+          <td>2 yr</td>
+          <td class="num">62 kg</td>
+          <td><span class="badge-x s-active"><i class="ti ti-circle-check"></i> Active</span></td>
+          <td style="color:var(--muted);font-size:12px">Pen G-3</td>
+          <td>
+            <div class="row-actions">
+              <div class="row-btn"><i class="ti ti-eye"></i></div>
+              <div class="row-btn"><i class="ti ti-edit"></i></div>
+              <div class="row-btn danger"><i class="ti ti-trash"></i></div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="animal-cell">
+              <div class="animal-emoji" style="background:#ffdbe1">🐷</div>
+              <div>
+                <div class="animal-name">Hammy</div>
+                <div class="animal-id">#A-0078</div>
+              </div>
+            </div>
+          </td>
+          <td><span class="species-tag">Pig</span></td>
+          <td>8 mo</td>
+          <td class="num">95 kg</td>
+          <td><span class="badge-x s-sick"><i class="ti ti-alert-triangle"></i> Sick</span></td>
+          <td style="color:var(--muted);font-size:12px">Pen P-1</td>
+          <td>
+            <div class="row-actions">
+              <div class="row-btn"><i class="ti ti-eye"></i></div>
+              <div class="row-btn"><i class="ti ti-edit"></i></div>
+              <div class="row-btn danger"><i class="ti ti-trash"></i></div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="animal-cell">
+              <div class="animal-emoji" style="background:#fef3c7">🐴</div>
+              <div>
+                <div class="animal-name">Thunder</div>
+                <div class="animal-id">#A-0033</div>
+              </div>
+            </div>
+          </td>
+          <td><span class="species-tag">Horse</span></td>
+          <td>5 yr</td>
+          <td class="num">510 kg</td>
+          <td><span class="badge-x s-sale"><i class="ti ti-tag"></i> For sale</span></td>
+          <td style="color:var(--muted);font-size:12px">Stable H-1</td>
+          <td>
+            <div class="row-actions">
+              <div class="row-btn"><i class="ti ti-eye"></i></div>
+              <div class="row-btn"><i class="ti ti-edit"></i></div>
+              <div class="row-btn danger"><i class="ti ti-trash"></i></div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="animal-cell">
+              <div class="animal-emoji" style="background:#ccfbf1">🐓</div>
+              <div>
+                <div class="animal-name">Rosie</div>
+                <div class="animal-id">#A-0091</div>
+              </div>
+            </div>
+          </td>
+          <td><span class="species-tag">Poultry</span></td>
+          <td>6 mo</td>
+          <td class="num">2.1 kg</td>
+          <td><span class="badge-x s-active"><i class="ti ti-circle-check"></i> Active</span></td>
+          <td style="color:var(--muted);font-size:12px">Coop C-2</td>
+          <td>
+            <div class="row-actions">
+              <div class="row-btn"><i class="ti ti-eye"></i></div>
+              <div class="row-btn"><i class="ti ti-edit"></i></div>
+              <div class="row-btn danger"><i class="ti ti-trash"></i></div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="animal-cell">
+              <div class="animal-emoji" style="background:#dbeafe">🐐</div>
+              <div>
+                <div class="animal-name">Mango</div>
+                <div class="animal-id">#A-0102</div>
+              </div>
+            </div>
+          </td>
+          <td><span class="species-tag">Goat</span></td>
+          <td>1 yr</td>
+          <td class="num">45 kg</td>
+          <td><span class="badge-x s-active"><i class="ti ti-circle-check"></i> Active</span></td>
+          <td style="color:var(--muted);font-size:12px">Pen G-1</td>
+          <td>
+            <div class="row-actions">
+              <div class="row-btn"><i class="ti ti-eye"></i></div>
+              <div class="row-btn"><i class="ti ti-edit"></i></div>
+              <div class="row-btn danger"><i class="ti ti-trash"></i></div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="animal-cell">
+              <div class="animal-emoji" style="background:#d4f3dd">🐄</div>
+              <div>
+                <div class="animal-name">Sultan</div>
+                <div class="animal-id">#A-0115</div>
+              </div>
+            </div>
+          </td>
+          <td><span class="species-tag">Cattle</span></td>
+          <td>4 yr</td>
+          <td class="num">480 kg</td>
+          <td><span class="badge-x s-sale"><i class="ti ti-tag"></i> For sale</span></td>
+          <td style="color:var(--muted);font-size:12px">Pen B-1</td>
+          <td>
+            <div class="row-actions">
+              <div class="row-btn"><i class="ti ti-eye"></i></div>
+              <div class="row-btn"><i class="ti ti-edit"></i></div>
+              <div class="row-btn danger"><i class="ti ti-trash"></i></div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pager">
+    <span>Showing 1–8 of 8</span>
+    <div class="page-btns">
+      <div class="page-btn"><i class="ti ti-chevron-left"></i></div>
+      <div class="page-btn current">1</div>
+      <div class="page-btn">2</div>
+      <div class="page-btn">3</div>
+      <div class="page-btn"><i class="ti ti-chevron-right"></i></div>
+    </div>
+  </div>
+
+</section>
