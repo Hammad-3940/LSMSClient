@@ -16,4 +16,8 @@ export class LoginComponent {
     //   this.errorMsg = 'Invalid credentials';
     // }
   }
+
+  navigateToForgotPassword() {
+    this.router.navigate(['/forgotpassword']);
+  }
 }

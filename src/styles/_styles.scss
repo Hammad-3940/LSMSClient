@@ -722,6 +722,10 @@ table.lp {
   }
 }
 
+.cursor-pointer {
+  cursor: pointer;
+}
+
 // ─── modal ───────────────────────────────────────────────
 .modal-content {
   border: 1px solid var(--border);
@@ -1279,5 +1283,129 @@ table.lp {
 
   .login-socials {
     grid-template-columns: 1fr;
+  }
+}
+
+// ─── forgot password ─────────────────────────────────────
+
+.forgot-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 18px;
+  margin: 0 auto 18px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient( 135deg, var(--leaf-100), var(--leaf-50) );
+  border: 1px solid rgba(21, 128, 61, 0.12);
+
+  i {
+    font-size: 34px;
+    color: var(--leaf-600);
+  }
+}
+
+.forgot-back {
+  text-align: center;
+  margin-top: 6px;
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--leaf-600);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--leaf-700);
+    }
+
+    i {
+      font-size: 16px;
+    }
+  }
+}
+
+// ─── otp page ────────────────────────────────────────────
+
+.otp-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 18px;
+  margin: 0 auto 18px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient( 135deg, var(--leaf-100), var(--leaf-50) );
+  border: 1px solid rgba(21, 128, 61, .12);
+
+  i {
+    font-size: 34px;
+    color: var(--leaf-600);
+  }
+}
+
+.otp-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 8px 0 12px;
+}
+
+.otp-box {
+  width: 52px;
+  height: 56px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ink);
+  outline: none;
+  transition: border-color .15s, box-shadow .15s, transform .15s;
+
+  &:focus {
+    border-color: var(--leaf-500);
+    box-shadow: var(--ring);
+    transform: translateY(-1px);
+  }
+}
+
+.otp-separator {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--leaf-600);
+  margin: 0 2px;
+}
+
+.otp-footer {
+  text-align: center;
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 8px;
+
+  a {
+    color: var(--leaf-600);
+    font-weight: 600;
+    text-decoration: none;
+    margin-left: 4px;
+
+    &:hover {
+      color: var(--leaf-700);
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .otp-box {
+    width: 42px;
+    height: 48px;
+    font-size: 18px;
+  }
+
+  .otp-container {
+    gap: 6px;
   }
 }
