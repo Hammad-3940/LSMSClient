@@ -1409,3 +1409,43 @@ table.lp {
     gap: 6px;
   }
 }
+
+// ─── reset password ──────────────────────────────────────
+
+.reset-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 18px;
+  margin: 0 auto 18px;
+
+  display: grid;
+  place-items: center;
+
+  background: linear-gradient(
+    135deg,
+    var(--leaf-100),
+    var(--leaf-50)
+  );
+
+  border: 1px solid rgba(21, 128, 61, .12);
+
+  i {
+    font-size: 34px;
+    color: var(--leaf-600);
+  }
+}
+
+.reset-footer {
+  margin-top: 6px;
+
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--muted);
+
+  padding: 12px 14px;
+  border-radius: 10px;
+
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+}

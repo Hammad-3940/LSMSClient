@@ -17,12 +17,14 @@ export class ForgotpasswordComponent {
     this.router.navigate(['/login']);
   }
 
+  // ─── Forgot Password ──────────────────────────────────────
   sendResetLink(): void {
     this.sectionEnable = "verifyOtp";
   }
 
+  // ─── Verify Otp ──────────────────────────────────────
   verifyOtp(): void {
-    // verify otp api call
+    this.sectionEnable = "resetPassword";
   }
 
   resendOtp(): void {
@@ -31,5 +33,13 @@ export class ForgotpasswordComponent {
 
   navigateToForgotPassword(): void {
     this.sectionEnable = "forgotPassword";
+  }
+
+  // ─── Reset Password ──────────────────────────────────────
+  resetPassword(): void {
+    // Call reset password API
+
+    // Success
+    this.router.navigate(['/login']);
   }
 }
