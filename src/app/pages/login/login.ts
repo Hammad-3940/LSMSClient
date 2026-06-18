@@ -16,29 +16,19 @@ export class LoginComponent {
 
   username = 'hammad3940@gmail.com';
   password = 'Hammad123@';
+
   constructor() { }
-  // login() {
-  //   // if (this.authService.login(this.username, this.password)) {
-  //   // this.router.navigate(['/dashboard']);
-  //   this.toastr.info('Welcome!', 'Login Successful');
-  //   // } else {
-  //   //   this.errorMsg = 'Invalid credentials';
-  //   // }
-  // }
 
   login() {
     this.authService.login({ email: this.username, password: this.password })
       .subscribe({
         next: (res) => {
           if (res.success) {
-            this.toastr.success(res.message, 'Login Successful');
+            //this.toastr.success('Login Successful');
             this.router.navigate(['/dashboard']);
           } else {
             this.toastr.error(res.message, 'Login Failed');
           }
-        },
-        error: (err) => {
-          this.toastr.error(err.error?.message || 'Server error', 'Error');
         }
       });
   }

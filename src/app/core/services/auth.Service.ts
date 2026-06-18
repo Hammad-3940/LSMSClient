@@ -1,7 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, tap } from 'rxjs';
-import { ApiResponse } from '../models/api-response.model';
+import { tap } from 'rxjs';
 import { LoginRequest, LoginResponse } from '../models/auth.model';
 import { ApiService } from './api.service';
 
@@ -14,7 +13,7 @@ export class AuthService {
 
   constructor() { }
 
-  login(payload: LoginRequest): Observable<ApiResponse<LoginResponse>> {
+  login(payload: LoginRequest) {
     return this.api.post<LoginResponse>('Account/AuthenticateUser', payload).pipe(
       tap(res => {
         if (res.success) {

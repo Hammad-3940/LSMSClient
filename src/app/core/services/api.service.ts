@@ -13,10 +13,9 @@ export class ApiService {
     return this.http.get<ApiResponse<T>>(`${this.baseUrl}/${endpoint}`);
   }
 
-  post<T>(endpoint: string, body: any): Observable<ApiResponse<T>> {
-    return this.http.post<ApiResponse<T>>(`${this.baseUrl}/${endpoint}`, body);
+  post<T = any>(endpoint: string, body: any) {
+    return this.http.post<any>(`${this.baseUrl}/${endpoint}`, body);
   }
-
   put<T>(endpoint: string, body: any): Observable<ApiResponse<T>> {
     return this.http.put<ApiResponse<T>>(`${this.baseUrl}/${endpoint}`, body);
   }
