@@ -42,50 +42,6 @@
   --font-display: "Plus Jakarta Sans", var(--font-ui);
 }
 
-:root {
-  --pine-950: #0e1d15;
-  --pine-900: #15291e;
-  --pine-800: #1b3526;
-  --pine-700: #264433;
-  --pine-600: #34614a;
-  --pine-500: #4a8a64;
-  --leaf-700: #166534;
-  --leaf-600: #15803d;
-  --leaf-500: #1aa44b;
-  --leaf-100: #dcfce7;
-  --leaf-50: #f0fdf4;
-  --bg: #f4f6f1;
-  --surface: #ffffff;
-  --surface-2: #fafbf8;
-  --border: #e6eae1;
-  --border-strong: #d6dccf;
-  --ink: #16241c;
-  --ink-2: #3c4a42;
-  --muted: #6f7d73;
-  --faint: #9aa79f;
-  --teal: #0d9488;
-  --teal-50: #effbf9;
-  --teal-100: #ccfbf1;
-  --amber: #d97706;
-  --amber-50: #fff8ec;
-  --amber-100: #fdecc8;
-  --emer: #16a34a;
-  --emer-50: #effaf1;
-  --emer-100: #d4f3dd;
-  --rose: #e11d48;
-  --rose-50: #fff1f3;
-  --rose-100: #ffdbe1;
-  --radius: 14px;
-  --radius-sm: 10px;
-  --radius-xs: 8px;
-  --shadow-sm: 0 1px 2px rgba(16,35,24,.05);
-  --shadow: 0 4px 14px rgba(16,35,24,.07);
-  --shadow-lg: 0 12px 30px rgba(16,35,24,.12);
-  --ring: 0 0 0 3px rgba(26,164,75,.22);
-  --font-ui: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-display: "Plus Jakarta Sans", var(--font-ui);
-}
-
 *, *::before, *::after {
   box-sizing: border-box;
 }
