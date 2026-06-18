@@ -15,7 +15,7 @@ export class AuthService {
   constructor() { }
 
   login(payload: LoginRequest): Observable<ApiResponse<LoginResponse>> {
-    return this.api.post<LoginResponse>('Pos/HeartBeat', payload).pipe(
+    return this.api.post<LoginResponse>('Account/AuthenticateUser', payload).pipe(
       tap(res => {
         if (res.success) {
           localStorage.setItem(this.TOKEN_KEY, res.data.token);

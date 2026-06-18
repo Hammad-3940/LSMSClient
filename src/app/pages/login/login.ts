@@ -14,9 +14,8 @@ export class LoginComponent {
   private router = inject(Router);
   private toastr = inject(ToastrService);
 
-  username = '';
-  password = '';
-  isLoading = false;
+  username = 'hammad3940@gmail.com';
+  password = 'Hammad123@';
   constructor() { }
   // login() {
   //   // if (this.authService.login(this.username, this.password)) {
@@ -28,9 +27,7 @@ export class LoginComponent {
   // }
 
   login() {
-    this.isLoading = true;
-
-    this.authService.login({ username: this.username, password: this.password })
+    this.authService.login({ email: this.username, password: this.password })
       .subscribe({
         next: (res) => {
           if (res.success) {
@@ -39,11 +36,9 @@ export class LoginComponent {
           } else {
             this.toastr.error(res.message, 'Login Failed');
           }
-          this.isLoading = false;
         },
         error: (err) => {
           this.toastr.error(err.error?.message || 'Server error', 'Error');
-          this.isLoading = false;
         }
       });
   }
