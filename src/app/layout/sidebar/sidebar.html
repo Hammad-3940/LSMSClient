@@ -8,7 +8,8 @@
   </div>
 
   <div class="nav-section">Main</div>
-  <div class="nav-link active"><i class="ti ti-layout-dashboard"></i><span class="nav-label">Dashboard</span></div>
+  <div class="nav-link" (click)="route('dashboard')" [class.active]="activeRoute === 'dashboard'"><i class="ti ti-layout-dashboard"></i><span class="nav-label">Dashboard</span></div>
+  <div class="nav-link" (click)="route('usermanagement')" [class.active]="activeRoute === 'usermanagement'"><i class="ti ti-paw"></i><span class="nav-label">User Management</span></div>
   <div class="nav-link"><i class="ti ti-paw"></i><span class="nav-label">Animals</span></div>
   <div class="nav-link"><i class="ti ti-clipboard-list"></i><span class="nav-label">Health records</span></div>
   <div class="nav-link"><i class="ti ti-currency-dollar"></i><span class="nav-label">Sales</span></div>

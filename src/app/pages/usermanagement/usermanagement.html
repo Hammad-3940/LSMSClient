@@ -1,0 +1,247 @@
+<div class="content um-page">
+
+  <!-- ── Header + Filter Card ── -->
+  <div class="um-header-card">
+
+    <div class="um-title-row">
+      <div>
+        <h2 class="um-heading">User Management</h2>
+        <p class="um-heading-sub">Manage team members, roles and access</p>
+      </div>
+      <button class="btn-primary-x" (click)="openAddModal()">
+        <i class="ti ti-user-plus"></i> Add User
+      </button>
+    </div>
+
+    <div class="um-filter-row">
+
+      <div class="um-fgroup">
+        <label>Name</label>
+        <div class="um-finput">
+          <i class="ti ti-user"></i>
+          <input type="text"
+                 placeholder="Search by name…"
+                 [ngModel]="searchName()"
+                 (ngModelChange)="searchName.set($event); currentPage.set(1)" />
+        </div>
+      </div>
+
+      <div class="um-fgroup">
+        <label>Email</label>
+        <div class="um-finput">
+          <i class="ti ti-mail"></i>
+          <input type="text"
+                 placeholder="Search by email…"
+                 [ngModel]="searchEmail()"
+                 (ngModelChange)="searchEmail.set($event); currentPage.set(1)" />
+        </div>
+      </div>
+
+      <div class="um-fgroup">
+        <label>Role</label>
+        <div class="um-fselect">
+          <i class="ti ti-chevron-down um-sel-arrow"></i>
+          <select [ngModel]="selectedRole()" (ngModelChange)="selectedRole.set($event); currentPage.set(1)">
+            <option value="All">All Roles</option>
+            <option value="Admin">Admin</option>
+            <option value="Manager">Manager</option>
+            <option value="Viewer">Viewer</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="um-fgroup">
+        <label>Status</label>
+        <div class="um-fselect">
+          <i class="ti ti-chevron-down um-sel-arrow"></i>
+          <select [ngModel]="selectedStatus()" (ngModelChange)="selectedStatus.set($event); currentPage.set(1)">
+            <option value="All">All Status</option>
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="um-fgroup um-fgroup-btn">
+        <label>&nbsp;</label>
+        <div class="um-fbtn-row">
+          <button class="btn-primary-x" (click)="applyFilters()">
+            <i class="ti ti-search"></i> Search
+          </button>
+          <button class="btn-ghost um-clear-btn" (click)="clearFilters()" title="Reset">
+            <i class="ti ti-rotate"></i>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── Table Panel ── -->
+  <section class="panel um-panel">
+
+    <div class="panel-head">
+      <div class="panel-title">
+        Users <span class="count">({{ filteredUsers().length }})</span>
+      </div>
+      <div class="um-panel-chips">
+        <span class="um-chip">
+          <span class="um-chip-dot cd-total"></span>
+          {{ users().length }} Total
+        </span>
+        <span class="um-chip">
+          <span class="um-chip-dot cd-active"></span>
+          {{ countByStatus('Active') }} Active
+        </span>
+        <span class="um-chip">
+          <span class="um-chip-dot cd-inactive"></span>
+          {{ countByStatus('Inactive') }} Inactive
+        </span>
+      </div>
+    </div>
+
+    <div class="table-scroll um-tscroll">
+      <table class="lp">
+        <thead>
+          <tr>
+            <th style="width:28%">User</th>
+            <th style="width:22%">Email</th>
+            <th style="width:13%">Role</th>
+            <th style="width:13%">Status</th>
+            <th style="width:13%">Joined</th>
+            <th style="width:11%"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of paginatedUsers()">
+            <td>
+              <div class="animal-cell">
+                <div class="um-av" [ngClass]="'av-' + user.name.charAt(0).toLowerCase()">
+                  {{ user.name.charAt(0) }}
+                </div>
+                <div>
+                  <div class="animal-name">{{ user.name }}</div>
+                  <div class="animal-id">#U-{{ user.id | number:'4.0-0' }}</div>
+                </div>
+              </div>
+            </td>
+            <td style="color:var(--muted);font-size:12.5px">{{ user.email }}</td>
+            <td>
+              <span class="um-rbadge" [ngClass]="'rb-' + user.role.toLowerCase()">
+                <i class="ti" [ngClass]="roleIcon(user.role)"></i>
+                {{ user.role }}
+              </span>
+            </td>
+            <td>
+              <span class="um-sbadge cursor-pointer"
+                    [class.sb-on]="user.status === 'Active'"
+                    [class.sb-off]="user.status === 'Inactive'"
+                    (click)="toggleStatus(user)"><span class="um-dot"></span>{{ user.status }}</span>
+            </td>
+            <td style="color:var(--faint);font-size:12px;font-variant-numeric:tabular-nums">
+              {{ user.createdAt }}
+            </td>
+            <td>
+              <div class="row-actions">
+                <div class="row-btn" (click)="openEditModal(user)" title="Edit">
+                  <i class="ti ti-edit"></i>
+                </div>
+                <div class="row-btn danger" (click)="deleteUser(user.id)" title="Delete">
+                  <i class="ti ti-trash"></i>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="paginatedUsers().length === 0">
+            <td colspan="6" class="um-empty">
+              <i class="ti ti-users-off"></i>
+              <span>No users found</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pager">
+      <span>
+        Showing {{ (currentPage()-1)*pageSize + 1 }}–{{ min(currentPage()*pageSize, filteredUsers().length) }}
+        of {{ filteredUsers().length }}
+      </span>
+      <div class="page-btns">
+        <div class="page-btn" (click)="setPage(currentPage()-1)" [class.disabled]="currentPage()===1">
+          <i class="ti ti-chevron-left"></i>
+        </div>
+        <div class="page-btn"
+             *ngFor="let p of pageNumbers"
+             [class.current]="p===currentPage()"
+             (click)="setPage(p)">{{ p }}</div>
+        <div class="page-btn" (click)="setPage(currentPage()+1)" [class.disabled]="currentPage()===totalPages()">
+          <i class="ti ti-chevron-right"></i>
+        </div>
+      </div>
+    </div>
+
+  </section>
+</div>
+
+<!-- ── Modal ── -->
+<div class="um-overlay" *ngIf="showModal()" (click)="showModal.set(false)">
+  <div class="um-modal" (click)="$event.stopPropagation()">
+
+    <div class="um-modal-head">
+      <div class="um-modal-icon-wrap">
+        <i class="ti" [ngClass]="isEditing() ? 'ti-user-edit' : 'ti-user-plus'"></i>
+      </div>
+      <div class="um-modal-titles">
+        <h4>{{ isEditing() ? 'Edit User' : 'Add New User' }}</h4>
+        <p>{{ isEditing() ? 'Update the details below' : 'Fill in details for new user' }}</p>
+      </div>
+      <div class="row-btn um-modal-close" (click)="showModal.set(false)">
+        <i class="ti ti-x"></i>
+      </div>
+    </div>
+
+    <div class="um-modal-body">
+      <div class="field">
+        <label>Full Name</label>
+        <div class="um-iw">
+          <i class="ti ti-user"></i>
+          <input type="text" placeholder="e.g. Ahmed Raza" [(ngModel)]="editingUser.name" />
+        </div>
+      </div>
+      <div class="field">
+        <label>Email Address</label>
+        <div class="um-iw">
+          <i class="ti ti-mail"></i>
+          <input type="email" placeholder="e.g. ahmed@lsms.pk" [(ngModel)]="editingUser.email" />
+        </div>
+      </div>
+      <div class="um-modal-row">
+        <div class="field">
+          <label>Role</label>
+          <select class="form-select" [(ngModel)]="editingUser.role">
+            <option value="Admin">Admin</option>
+            <option value="Manager">Manager</option>
+            <option value="Viewer">Viewer</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Status</label>
+          <select class="form-select" [(ngModel)]="editingUser.status">
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="um-modal-foot">
+      <button class="btn-ghost" (click)="showModal.set(false)">Cancel</button>
+      <button class="btn-primary-x" (click)="saveUser()">
+        <i class="ti" [ngClass]="isEditing() ? 'ti-device-floppy' : 'ti-user-plus'"></i>
+        {{ isEditing() ? 'Save Changes' : 'Add User' }}
+      </button>
+    </div>
+
+  </div>
+</div>
