@@ -23,6 +23,7 @@
     "@angular/ssr": "^22.0.1",
     "express": "^5.1.0",
     "ngx-toastr": "^20.0.5",
+    "ngx-ui-loader": "^19.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },
