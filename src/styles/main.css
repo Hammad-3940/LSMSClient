@@ -92,7 +92,6 @@ body {
   color: #d8e6dc;
   display: flex;
   flex-direction: column;
-  position: -webkit-sticky;
   position: sticky;
   top: 0;
   height: 100vh;
@@ -211,14 +210,12 @@ body {
 .topbar {
   height: 64px;
   background: rgba(255, 255, 255, 0.82);
-  -webkit-backdrop-filter: blur(8px);
-          backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
   gap: 12px;
   padding: 0 24px;
-  position: -webkit-sticky;
   position: sticky;
   top: 0;
   z-index: 20;
@@ -545,7 +542,6 @@ table.lp {
   min-width: 720px;
 }
 table.lp thead {
-  position: -webkit-sticky;
   position: sticky;
   top: 0;
   z-index: 1;
@@ -782,9 +778,6 @@ table.lp tbody td {
 .field .form-control::-moz-placeholder, .field .form-select::-moz-placeholder {
   color: var(--faint);
 }
-.field .form-control:-ms-input-placeholder, .field .form-select:-ms-input-placeholder {
-  color: var(--faint);
-}
 .field .form-control::placeholder,
 .field .form-select::placeholder {
   color: var(--faint);
@@ -836,9 +829,9 @@ table.lp tbody td {
     padding: 18px 0;
   }
   .brand-text,
-.nav-section,
-.nav-label,
-.farm-text {
+  .nav-section,
+  .nav-label,
+  .farm-text {
     display: none;
   }
   .nav-link {
@@ -1086,9 +1079,6 @@ table.lp tbody td {
 .login-input-wrap input::-moz-placeholder {
   color: var(--faint);
 }
-.login-input-wrap input:-ms-input-placeholder {
-  color: var(--faint);
-}
 .login-input-wrap input::placeholder {
   color: var(--faint);
 }
@@ -1120,7 +1110,6 @@ table.lp tbody td {
   color: var(--ink-2);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 .login-checkbox input {
@@ -1510,9 +1499,6 @@ table.lp tbody td {
 .um-finput input::-moz-placeholder {
   color: var(--faint);
 }
-.um-finput input:-ms-input-placeholder {
-  color: var(--faint);
-}
 .um-finput input::placeholder {
   color: var(--faint);
 }
@@ -1740,8 +1726,7 @@ table.lp tbody td {
   justify-content: center;
   z-index: 1000;
   padding: 16px;
-  -webkit-backdrop-filter: blur(3px);
-          backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
 }
 
 .um-modal {
@@ -1842,9 +1827,6 @@ table.lp tbody td {
   color: var(--ink);
 }
 .um-iw input::-moz-placeholder {
-  color: var(--faint);
-}
-.um-iw input:-ms-input-placeholder {
   color: var(--faint);
 }
 .um-iw input::placeholder {

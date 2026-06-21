@@ -42,44 +42,61 @@
         <p class="login-subtitle">Sign in to your farm account</p>
       </div>
 
-      <div class="login-form">
-
-        <div class="login-field">
-          <label>Email address</label>
-          <div class="login-input-wrap">
-            <i class="ti ti-mail"></i>
-            <input type="email" placeholder="you@example.com">
+      <form [formGroup]="loginForm">
+        <div class="login-form">
+          <div class="login-field">
+            <label>Email address</label>
+            <div class="login-input-wrap">
+              <i class="ti ti-mail"></i>
+              <input tabindex="1" type="email" placeholder="you@example.com" formControlName="email" (keyup.enter)="login()" (input)="checkPasswordByEmail()" #emailInput>
+            </div>
+            @if ((loginForm.controls['email'].touched && loginForm.controls['email'].invalid)|| loginForm.controls['email'].dirty) {
+            <div class="field-error">
+              @if (loginForm.controls['email'].errors?.['required']) {
+              <span> Email address is required. </span>
+              }
+              @if (loginForm.controls['email'].errors?.['pattern']) {
+              <span> Please enter a valid email address. </span>
+              }
+            </div>
+            }
           </div>
-        </div>
 
-        <div class="login-field">
-          <div class="login-field-head">
-            <label>Password</label>
-            <a (click)="navigateToForgotPassword()" class="login-forgot cursor-pointer">Forgot password?</a>
+          <div class="login-field">
+            <div class="login-field-head">
+              <label>Password</label>
+              <a (click)="navigateToForgotPassword()" class="login-forgot cursor-pointer">Forgot password?</a>
+            </div>
+            <div class="login-input-wrap">
+              <i class="ti ti-lock"></i>
+              <input tabindex="2" [type]="showPassword ? 'text' : 'password'" placeholder="••••••••" formControlName="password" (keyup.enter)="login()">
+              <button class="login-eye" type="button" (click)="showPassword = !showPassword">
+                <i class="ti" [ngClass]="showPassword ? 'ti-eye' : 'ti-eye-off'"></i>
+              </button>
+            </div>
+            @if (loginForm.controls['password'].touched && loginForm.controls['password'].invalid) {
+            <div class="field-error">
+              @if (loginForm.controls['password'].errors?.['required']) {
+              <span> Password is required. </span>
+              }
+            </div>
+            }
           </div>
-          <div class="login-input-wrap">
-            <i class="ti ti-lock"></i>
-            <input [type]="showPassword ? 'text' : 'password'" placeholder="••••••••">
-            <button class="login-eye" type="button" (click)="showPassword = !showPassword">
-              <i class="ti" [ngClass]="showPassword ? 'ti-eye' : 'ti-eye-off'"></i>
-            </button>
+
+
+          <div class="login-remember ">
+            <label class="login-checkbox">
+              <input type="checkbox" formControlName="rememberMe">
+              <span class="login-checkmark"></span>
+              Remember me
+            </label>
           </div>
+          <button tabindex="3" class="login-btn" (click)="login()">
+            <i class="ti ti-login"></i>
+            Sign in
+          </button>
         </div>
-
-        <div class="login-remember">
-          <label class="login-checkbox">
-            <input type="checkbox">
-            <span class="login-checkmark"></span>
-            Remember me
-          </label>
-        </div>
-
-        <button class="login-btn" (click)="login()">
-          <i class="ti ti-login"></i>
-          Sign in
-        </button>
-      </div>
+      </form>
     </div>
   </div>
-
 </div>

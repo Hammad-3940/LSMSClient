@@ -1,39 +1,93 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../core/services/auth.Service';
 
 @Component({
   selector: 'app-login',
-  imports: [CommonModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit, AfterViewInit {
+  @ViewChild('emailInput') emailInput!: ElementRef<HTMLInputElement>;
   private authService = inject(AuthService);
   private router = inject(Router);
   private toastr = inject(ToastrService);
+
+  loginForm!: FormGroup;
 
   username = 'hammad3940@gmail.com';
   password = 'Hammad123@';
 
   showPassword = false;
 
-  constructor() { }
+  constructor(private formbuilder: FormBuilder) { }
+
+  ngOnInit() {
+    this.loginFormGroup();
+  }
+
+  ngAfterViewInit() {
+    setTimeout(() => {
+      this.emailInput.nativeElement.focus();
+    }, 200);
+  }
+
+  loginFormGroup() {
+    this.loginForm = this.formbuilder.group({
+      email: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{3,4}$/)]),
+      password: new FormControl('', [Validators.required]),
+      rememberMe: [false]
+    });
+  }
 
   login() {
-    this.authService.login({ email: this.username, password: this.password })
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
+      return;
+    }
+
+    this.authService.login(this.loginForm.value)
       .subscribe({
         next: (res) => {
           if (res.success) {
-            //this.toastr.success('Login Successful');
+            const formValue = this.loginForm.value;
+
+            if (formValue.rememberMe) {
+              localStorage.setItem(`pwd_${formValue.email}`, formValue.password);
+            }
+            localStorage.setItem('token', res?.data?.jwtToken);
+            this.loginForm.reset();
             this.router.navigate(['/dashboard']);
           } else {
-            this.toastr.error(res.message, 'Login Failed');
+            this.toastr.error(res.message);
           }
         }
       });
+  }
+
+  checkPasswordByEmail() {
+    debugger
+    const email = this.loginForm.get('email')?.value;
+
+    if (!email) return;
+
+    const savedPassword = localStorage.getItem(`pwd_${email}`);
+
+    if (savedPassword) {
+      this.loginForm.patchValue({
+        password: savedPassword,
+        rememberMe: true
+      }, { emitEvent: false });
+    } else {
+      this.loginForm.patchValue({
+        password: '',
+        rememberMe: false
+      }, { emitEvent: false });
+    }
   }
 
   navigateToForgotPassword() {

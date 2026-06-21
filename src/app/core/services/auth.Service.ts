@@ -1,7 +1,5 @@
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { tap } from 'rxjs';
-import { LoginRequest } from '../models/auth.model';
 import { ApiService } from './api.service';
 
 @Injectable({ providedIn: 'root' })
@@ -13,14 +11,8 @@ export class AuthService {
 
   constructor() { }
 
-  login(payload: LoginRequest) {
-    return this.api.post<any>('Account/AuthenticateUser', payload).pipe(
-      tap(res => {
-        if (res.success) {
-          localStorage.setItem(this.TOKEN_KEY, res.data.token);
-        }
-      })
-    );
+  login(request: any) {
+    return this.api.post<any>('Account/AuthenticateUser', request);
   }
 
   logout(): void {
