@@ -12,6 +12,14 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+.field-error {
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #dc2626; // red-600
+  line-height: 1.4;
+}
+
 .sr-only-h {
   position: absolute;
   width: 1px;

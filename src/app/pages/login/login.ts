@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -5,7 +6,7 @@ import { AuthService } from '../../core/services/auth.Service';
 
 @Component({
   selector: 'app-login',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
@@ -16,6 +17,8 @@ export class LoginComponent {
 
   username = 'hammad3940@gmail.com';
   password = 'Hammad123@';
+
+  showPassword = false;
 
   constructor() { }
 

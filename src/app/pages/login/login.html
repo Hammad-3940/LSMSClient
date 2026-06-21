@@ -48,7 +48,7 @@
           <label>Email address</label>
           <div class="login-input-wrap">
             <i class="ti ti-mail"></i>
-            <input type="email" placeholder="you@hussainfarm.com">
+            <input type="email" placeholder="you@example.com">
           </div>
         </div>
 
@@ -59,9 +59,9 @@
           </div>
           <div class="login-input-wrap">
             <i class="ti ti-lock"></i>
-            <input type="password" placeholder="••••••••">
-            <button class="login-eye" type="button">
-              <i class="ti ti-eye"></i>
+            <input [type]="showPassword ? 'text' : 'password'" placeholder="••••••••">
+            <button class="login-eye" type="button" (click)="showPassword = !showPassword">
+              <i class="ti" [ngClass]="showPassword ? 'ti-eye' : 'ti-eye-off'"></i>
             </button>
           </div>
         </div>
