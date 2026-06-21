@@ -70,7 +70,6 @@ export class LoginComponent implements OnInit, AfterViewInit {
   }
 
   checkPasswordByEmail() {
-    debugger
     const email = this.loginForm.get('email')?.value;
 
     if (!email) return;

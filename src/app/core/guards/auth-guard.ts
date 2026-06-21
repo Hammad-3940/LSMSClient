@@ -1,13 +1,19 @@
-import { inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { inject, PLATFORM_ID } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { AuthService } from '../services/auth.Service';
+import { CommonService } from '../../shared/common.service';
 
 export const authGuard: CanActivateFn = () => {
-  const auth = inject(AuthService);
+  const commonService = inject(CommonService);
   const router = inject(Router);
+  const platformId = inject(PLATFORM_ID);
 
-  const token = localStorage.getItem('token');
+  // ✅ SSR bypass
+  if (!isPlatformBrowser(platformId)) {
+    return true;
+  }
 
+  const token = commonService.getToken();
   if (token) {
     return true;
   }
