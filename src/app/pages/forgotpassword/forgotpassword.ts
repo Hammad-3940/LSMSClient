@@ -56,7 +56,7 @@ export class ForgotpasswordComponent implements OnInit, AfterViewInit {
   // ─── Forgot Password ──────────────────────────────────────
   sendResetLink(): void {
     if (this.forgotForm.invalid) {
-      this.forgotForm.markAsTouched();
+      this.forgotForm.markAllAsTouched();
       return;
     }
 
@@ -64,7 +64,12 @@ export class ForgotpasswordComponent implements OnInit, AfterViewInit {
       .subscribe({
         next: (res) => {
           if (res.success) {
-            this.SendVerificationCode();
+            setTimeout(() => {
+              this.SendVerificationCode();
+            }, 500);
+          }
+          else {
+            this.toastr.error(res.responseMessage);
           }
         }
       });
