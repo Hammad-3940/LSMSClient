@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, inject, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ForgotpasswordService } from '../../core/services/forgotpassword.service';
 import { CommonService } from '../../shared/common.service';
@@ -20,18 +20,26 @@ export class ForgotpasswordComponent implements OnInit, AfterViewInit {
   private forgotpasswordService = inject(ForgotpasswordService);
   private toastr = inject(ToastrService);
   private commonService = inject(CommonService);
+  private route = inject(ActivatedRoute);
 
   forgotForm!: FormGroup;
   otpForm!: FormGroup;
-  sectionEnable: string = "forgotPassword";
+  sectionEnable!: string;
   userEmail: string = "";
   code!: string;
+  oldPasswordError: string = '';
   passwordError: string = '';
   confirmPasswordError: string = '';
   showPassword = false;
+  showOldPassword = false;
   showConfirmPassword = false;
 
-  constructor(private router: Router, private formbuilder: FormBuilder) { }
+  constructor(private router: Router, private formbuilder: FormBuilder) {
+    const state = this.router.currentNavigation()?.extras?.state;
+
+    this.userEmail = state?.['userEmail'] ?? '';
+    this.sectionEnable = state?.['sectionEnable'] ?? 'forgotPassword';
+  }
 
   navigateToLogin(): void {
     this.router.navigate(['/login']);
@@ -212,9 +220,17 @@ export class ForgotpasswordComponent implements OnInit, AfterViewInit {
       });
   }
 
-  validatePassword(password: string, confirmPassword: string): boolean {
+  validatePassword(password: string, confirmPassword: string, oldPassword?: string): boolean {
     // Clear previous errors
     this.clearErrors();
+
+    // Password required
+    if (oldPassword != undefined) {
+      if (!oldPassword?.trim()) {
+        this.oldPasswordError = 'Old Password is required.';
+        return false;
+      }
+    }
 
     // Password required
     if (!password?.trim()) {
@@ -257,7 +273,33 @@ export class ForgotpasswordComponent implements OnInit, AfterViewInit {
   }
 
   clearErrors(): void {
+    this.oldPasswordError = '';
     this.passwordError = '';
     this.confirmPasswordError = '';
+  }
+
+  // ─── Expire Password ──────────────────────────────────────
+
+  resetExpiredPassword(password: string, confirmPassword: string, oldPassword: string): void {
+    if (!this.validatePassword(password, confirmPassword, oldPassword)) return;
+
+    const payload = {
+      email: this.userEmail,
+      oldPassword: oldPassword,
+      password: password,
+      confirmPassword: confirmPassword
+    }
+
+    this.forgotpasswordService.resetExpiredPassword(payload)
+      .subscribe({
+        next: (res) => {
+          if (res.success) {
+            this.toastr.success(res?.responseMessage);
+            this.router.navigate(['/login']);
+          } else {
+            this.toastr.error(res.responseMessage);
+          }
+        }
+      });
   }
 }

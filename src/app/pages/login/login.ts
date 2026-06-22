@@ -19,9 +19,6 @@ export class LoginComponent implements OnInit, AfterViewInit {
 
   loginForm!: FormGroup;
 
-  username = 'hammad3940@gmail.com';
-  password = 'Hammad123@';
-
   showPassword = false;
 
   constructor(private formbuilder: FormBuilder) { }
@@ -55,6 +52,12 @@ export class LoginComponent implements OnInit, AfterViewInit {
         next: (res) => {
           if (res.success) {
             const formValue = this.loginForm.value;
+            if (res?.data?.days > 30) {
+              this.router.navigate(['/forgotpassword'], {
+                state: { userEmail: formValue.email, sectionEnable: 'expirePassword' }
+              });
+              return
+            }
 
             if (formValue.rememberMe) {
               localStorage.setItem(`pwd_${formValue.email}`, formValue.password);

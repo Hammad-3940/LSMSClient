@@ -22,4 +22,8 @@ export class ForgotpasswordService {
   resetPassword(request: any) {
     return this.api.post<any>('Account/ResetPassword', request);
   }
+
+  resetExpiredPassword(request: any) {
+    return this.api.post<any>('Account/ResetExpiredPassword', request);
+  }
 }
