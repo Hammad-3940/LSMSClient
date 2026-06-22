@@ -47,11 +47,11 @@ export class LoginComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    this.authService.login(this.loginForm.value)
+    this.authService.login(this.loginForm?.value)
       .subscribe({
         next: (res) => {
           if (res.success) {
-            const formValue = this.loginForm.value;
+            const formValue = this.loginForm?.value;
             if (res?.data?.days > 30) {
               this.router.navigate(['/forgotpassword'], {
                 state: { userEmail: formValue.email, sectionEnable: 'expirePassword' }
@@ -59,14 +59,14 @@ export class LoginComponent implements OnInit, AfterViewInit {
               return
             }
 
-            if (formValue.rememberMe) {
-              localStorage.setItem(`pwd_${formValue.email}`, formValue.password);
+            if (formValue?.rememberMe) {
+              localStorage.setItem(`pwd_${formValue?.email}`, formValue?.password);
             }
             localStorage.setItem('token', res?.data?.jwtToken);
             this.loginForm.reset();
             this.router.navigate(['/dashboard']);
           } else {
-            this.toastr.error(res.message);
+            this.toastr.error(res?.responseMessage);
           }
         }
       });

@@ -15,6 +15,7 @@ import { CommonService } from '../../shared/common.service';
 export class ForgotpasswordComponent implements OnInit, AfterViewInit {
   @ViewChild('emailInput') emailInput!: ElementRef<HTMLInputElement>;
   @ViewChild('password') password!: ElementRef<HTMLInputElement>;
+  @ViewChild('oldPassword') oldPassword!: ElementRef<HTMLInputElement>;
   @ViewChildren('otpBox') otpBoxes!: QueryList<ElementRef<HTMLInputElement>>;
 
   private forgotpasswordService = inject(ForgotpasswordService);
@@ -39,6 +40,12 @@ export class ForgotpasswordComponent implements OnInit, AfterViewInit {
 
     this.userEmail = state?.['userEmail'] ?? '';
     this.sectionEnable = state?.['sectionEnable'] ?? 'forgotPassword';
+
+    setTimeout(() => {
+      if (this.sectionEnable === 'expirePassword') {
+        this.oldPassword.nativeElement.focus();
+      }
+    }, 200);
   }
 
   navigateToLogin(): void {
@@ -282,6 +289,11 @@ export class ForgotpasswordComponent implements OnInit, AfterViewInit {
 
   resetExpiredPassword(password: string, confirmPassword: string, oldPassword: string): void {
     if (!this.validatePassword(password, confirmPassword, oldPassword)) return;
+
+    if (password.trim().toLowerCase() === oldPassword.trim().toLowerCase()) {
+      this.toastr.info("New password must be different from your current password.");
+      return;
+    }
 
     const payload = {
       email: this.userEmail,
