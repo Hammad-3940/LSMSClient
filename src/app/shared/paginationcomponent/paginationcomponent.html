@@ -1,0 +1,47 @@
+<div class="pager">
+  <span>
+    Showing {{ (currentPage()-1) * pageSize() + 1 }} - {{ min(currentPage() * pageSize(), totalRecords()) }} of {{ totalRecords() }}
+  </span>
+  <div class="pager-right">
+    <div class="ps-wrap" #pageSizeDropdown>
+      <span class="ps-label">Rows per page</span>
+      <div class="ps-select"
+           (click)="togglePageSizeMenu()"
+           [class.open]="pageSizeMenuOpen()">
+
+        <span>{{ pageSize() }}</span>
+        <i class="ti ti-chevron-down"></i>
+        @if (pageSizeMenuOpen()) {
+        <div class="ps-menu">
+          @for (size of pageSizeOptions; track size) {
+          <div class="ps-opt"
+               [class.sel]="size === pageSize()"
+               (click)="setPageSize(size); $event.stopPropagation()">
+            {{ size }}
+          </div>
+          }
+        </div>
+        }
+      </div>
+    </div>
+    <div class="page-btns">
+      <div class="page-btn"
+           (click)="setPage(currentPage()-1)"
+           [class.disabled]="currentPage()===1">
+        <i class="ti ti-chevron-left"></i>
+      </div>
+      @for (p of pageNumbers(); track p) {
+      <div class="page-btn"
+           [class.current]="p===currentPage()"
+           (click)="setPage(p)">
+        {{ p }}
+      </div>
+      }
+      <div class="page-btn"
+           (click)="setPage(currentPage()+1)"
+           [class.disabled]="currentPage()===totalPages()">
+        <i class="ti ti-chevron-right"></i>
+      </div>
+    </div>
+  </div>
+</div>

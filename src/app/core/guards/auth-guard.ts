@@ -1,7 +1,7 @@
 import { isPlatformBrowser } from '@angular/common';
 import { inject, PLATFORM_ID } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { CommonService } from '../../shared/common.service';
+import { CommonService } from '../../shared/commonservice/common.service';
 
 export const authGuard: CanActivateFn = () => {
   const commonService = inject(CommonService);

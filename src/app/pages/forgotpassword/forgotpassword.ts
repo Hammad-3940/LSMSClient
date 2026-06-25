@@ -4,7 +4,7 @@ import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Va
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ForgotpasswordService } from '../../core/services/forgotpassword.service';
-import { CommonService } from '../../shared/common.service';
+import { CommonService } from '../../shared/commonservice/common.service';
 
 @Component({
   selector: 'app-forgotpassword',
