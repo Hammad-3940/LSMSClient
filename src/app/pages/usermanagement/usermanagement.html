@@ -189,7 +189,6 @@
 <!-- ── Modal ── -->
 <div class="um-overlay" *ngIf="showModal()" (click)="showModal.set(false)">
   <div class="um-modal" (click)="$event.stopPropagation()">
-
     <div class="um-modal-head">
       <div class="um-modal-icon-wrap">
         <i class="ti" [ngClass]="isEditing() ? 'ti-user-edit' : 'ti-user-plus'"></i>
@@ -202,13 +201,36 @@
         <i class="ti ti-x"></i>
       </div>
     </div>
-
     <div class="um-modal-body">
-      <div class="field">
-        <label>Full Name</label>
-        <div class="um-iw">
-          <i class="ti ti-user"></i>
-          <input type="text" placeholder="e.g. Ahmed Raza" [(ngModel)]="editingUser.name" />
+      <div class="um-modal-row">
+        <div class="field">
+          <label>First Name</label>
+          <div class="um-iw">
+            <i class="ti ti-user"></i>
+            <input type="text" placeholder="e.g. Ahmed Raza" [(ngModel)]="editingUser.name" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Middle Name</label>
+          <div class="um-iw">
+            <i class="ti ti-user"></i>
+            <input type="text" placeholder="e.g. Ahmed Raza" [(ngModel)]="editingUser.name" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Last Name</label>
+          <div class="um-iw">
+            <i class="ti ti-user"></i>
+            <input type="text" placeholder="e.g. Ahmed Raza" [(ngModel)]="editingUser.name" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Role</label>
+          <select class="form-select" [(ngModel)]="editingUser.role">
+            <option value="Admin">Admin</option>
+            <option value="Manager">Manager</option>
+            <option value="Viewer">Viewer</option>
+          </select>
         </div>
       </div>
       <div class="field">
@@ -220,19 +242,34 @@
       </div>
       <div class="um-modal-row">
         <div class="field">
-          <label>Role</label>
-          <select class="form-select" [(ngModel)]="editingUser.role">
-            <option value="Admin">Admin</option>
-            <option value="Manager">Manager</option>
-            <option value="Viewer">Viewer</option>
-          </select>
-        </div>
-        <div class="field">
           <label>Status</label>
           <select class="form-select" [(ngModel)]="editingUser.status">
             <option value="Active">Active</option>
             <option value="Inactive">Inactive</option>
           </select>
+        </div>
+        <div class="field">
+          <label>Gender</label>
+          <select class="form-select" [(ngModel)]="editingUser.status">
+            <option value="Active">Male</option>
+            <option value="Inactive">Female</option>
+          </select>
+        </div>
+      </div>
+      <div class="um-modal-row">
+        <div class="field">
+          <label>Password</label>
+          <div class="um-iw">
+            <i class="ti ti-user"></i>
+            <input type="text" placeholder="e.g. Ahmed Raza" [(ngModel)]="editingUser.name" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Confirm Password</label>
+          <div class="um-iw">
+            <i class="ti ti-user"></i>
+            <input type="text" placeholder="e.g. Ahmed Raza" [(ngModel)]="editingUser.name" />
+          </div>
         </div>
       </div>
     </div>

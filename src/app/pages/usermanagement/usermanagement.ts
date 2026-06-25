@@ -1,10 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, inject, OnInit, signal } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { MiscellaneousService } from '../../core/services/miscellaneous.service';
 import { UserManagementService } from '../../core/services/usermanagement.service';
 import { CommonService } from '../../shared/commonservice/common.service';
+import { Onlyletterdirective } from '../../shared/directives/onlyletterdirective';
+import { Phonenumberdirective } from '../../shared/directives/phonenumberdirective';
 import { PaginationComponent } from '../../shared/paginationcomponent/paginationcomponent';
 
 export interface User {
@@ -18,7 +20,7 @@ export interface User {
 
 @Component({
   selector: 'app-usermanagement',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, PaginationComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, PaginationComponent, Onlyletterdirective, Phonenumberdirective],
   templateUrl: './usermanagement.html',
   styleUrl: './usermanagement.scss',
 })
@@ -39,6 +41,13 @@ export class UserManagementComponent implements OnInit {
   private commonService = inject(CommonService);
 
   getUserInfoFormGroup!: FormGroup;
+  upsertUserFormGroup!: FormGroup;
+
+  passwordError: string = '';
+  confirmPasswordError: string = '';
+  showPassword = false;
+  showConfirmPassword = false;
+
   showModal = signal(false);
   isEditing = signal(false);
   editingUser: Partial<User> = {};
@@ -50,6 +59,7 @@ export class UserManagementComponent implements OnInit {
     this.GetUserRole();
     this.GetUserStatus();
     this.GetUserInformationFormGroup();
+    this.UpsertUserFormGroup();
     this.GetUsersInformation();
   }
 
@@ -62,6 +72,22 @@ export class UserManagementComponent implements OnInit {
       roleId: new FormControl(0),
       pageNumber: new FormControl(1),
       numberOfRecords: new FormControl(10),
+    });
+  }
+
+  UpsertUserFormGroup() {
+    this.upsertUserFormGroup = this.formbuilder.group({
+      firstName: new FormControl('', [Validators.required]),
+      middleName: new FormControl(''),
+      lastName: new FormControl('', [Validators.required]),
+      email: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{3,4}$/)]),
+      phoneNumber: new FormControl(''),
+      statusId: new FormControl(null),
+      genderId: new FormControl(null),
+      roleId: new FormControl(null, [Validators.required]),
+      password: new FormControl(''),
+      confirmPassword: new FormControl(''),
+      isApproved: new FormControl(false),
     });
   }
 
@@ -151,8 +177,45 @@ export class UserManagementComponent implements OnInit {
     this.showModal.set(true);
   }
 
-  saveUser() {
+  RegisterUser() {
+    if (this.upsertUserFormGroup.invalid) {
+      this.upsertUserFormGroup.markAllAsTouched();
+      return;
+    }
 
+    const validation = this.commonService.validatePassword(this.upsertUserFormGroup.value.password, this.upsertUserFormGroup.value.confirmPassword);
+
+    if (!validation.isValid) {
+      this.passwordError = validation?.passwordError;
+      this.confirmPasswordError = validation?.confirmPasswordError;
+      return
+    }
+
+    this.userManagementService.RegisterUser(this.upsertUserFormGroup.value)
+      .subscribe({
+        next: (res) => {
+          if (res.success) {
+            this.toastr.success(res?.responseMessage);
+            this.showModal.set(false);
+            this.GetUsersInformation(true);
+            this.clearErrors();
+            this.upsertUserFormGroup.reset();
+          } else {
+            this.toastr.error(res.responseMessage);
+          }
+        }
+      });
+
+  }
+
+  closeUpsertUserModel() {
+    this.showModal.set(false);
+    this.upsertUserFormGroup.reset();
+  }
+
+  clearErrors(): void {
+    this.passwordError = '';
+    this.confirmPasswordError = '';
   }
 
   deleteUser(id: number) {

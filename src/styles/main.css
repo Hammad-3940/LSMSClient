@@ -808,6 +808,10 @@ table.lp tbody td {
   cursor: pointer;
 }
 
+.text-danger {
+  color: red;
+}
+
 .modal-content {
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -1554,7 +1558,7 @@ table.lp tbody td {
   font-size: 11px;
   font-weight: 600;
   color: var(--muted);
-  text-transform: uppercase;
+  text-transform: none;
   letter-spacing: 0.06em;
 }
 
@@ -1587,7 +1591,6 @@ table.lp tbody td {
   gap: 8px;
   border: 1px solid var(--border);
   border-radius: var(--radius-xs);
-  background: var(--surface-2);
   padding: 0 11px;
   transition: border-color 0.15s, box-shadow 0.15s;
 }
@@ -1617,11 +1620,10 @@ table.lp tbody td {
 }
 
 .um-fselect {
-  height: 36px;
+  height: 38px;
   position: relative;
   border: 1px solid var(--border);
   border-radius: var(--radius-xs);
-  background: var(--surface-2);
   transition: border-color 0.15s, box-shadow 0.15s;
 }
 .um-fselect:focus-within {
@@ -1891,7 +1893,7 @@ table.lp tbody td {
 
 .um-modal {
   width: 100%;
-  max-width: 460px;
+  max-width: 530px;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -1943,7 +1945,7 @@ table.lp tbody td {
   padding: 18px;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 6px;
 }
 
 .um-modal-row {
@@ -1965,7 +1967,6 @@ table.lp tbody td {
   padding: 0 11px;
   border: 1px solid var(--border);
   border-radius: var(--radius-xs);
-  background: var(--surface-2);
   transition: border-color 0.15s, box-shadow 0.15s;
 }
 .um-iw:focus-within {

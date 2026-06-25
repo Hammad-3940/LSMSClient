@@ -10,4 +10,20 @@ export class UserManagementService {
   GetUsersInformation(request: any) {
     return this.api.post<any>('User/GetUsersInformation', request);
   }
+
+  RegisterUser(request: any) {
+    return this.api.post<any>('User/RegisterUser', request);
+  }
+
+  UpdateUser(request: any) {
+    return this.api.post<any>('User/UpdateUser', request);
+  }
+
+  DeleteUser(request: any) {
+    return this.api.post<any>('User/DeleteUser', request);
+  }
+
+  ChangePassword(request: any) {
+    return this.api.post<any>('User/ChangePassword', request);
+  }
 }

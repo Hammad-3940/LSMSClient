@@ -59,6 +59,11 @@ export class LoginComponent implements OnInit, AfterViewInit {
               return
             }
 
+            if (res?.data?.status == "Inactive" || res?.data?.status == "Unapproved") {
+              this.toastr.info(res?.responseMessage);
+              return
+            }
+
             if (formValue?.rememberMe) {
               localStorage.setItem(`pwd_${formValue?.email}`, formValue?.password);
             }

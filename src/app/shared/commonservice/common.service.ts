@@ -1,5 +1,12 @@
 import { Injectable } from '@angular/core';
 
+export interface PasswordValidationResult {
+  isValid: boolean;
+  passwordError: string;
+  confirmPasswordError: string;
+  oldPasswordError: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -40,4 +47,68 @@ export class CommonService {
     }
     return null;
   }
+
+  validatePassword(password: string, confirmPassword: string, oldPassword?: string): PasswordValidationResult {
+
+    const result: PasswordValidationResult = {
+      isValid: false,
+      passwordError: '',
+      confirmPasswordError: '',
+      oldPasswordError: ''
+    };
+
+    if (oldPassword !== undefined && !oldPassword?.trim()) {
+      result.oldPasswordError = 'Old Password is required.';
+      return result;
+    }
+
+    if (!password?.trim()) {
+      result.passwordError = 'Password is required.';
+      return result;
+    }
+
+    if (!confirmPassword?.trim()) {
+      result.confirmPasswordError = 'Confirm password is required.';
+      return result;
+    }
+
+    if (password.length < 8) {
+      result.passwordError =
+        'Password must be at least 8 characters long.';
+      return result;
+    }
+
+    const missingRules: string[] = [];
+
+    if (!/[A-Z]/.test(password)) {
+      missingRules.push('one uppercase letter');
+    }
+
+    if (!/[a-z]/.test(password)) {
+      missingRules.push('one lowercase letter');
+    }
+
+    if (!/\d/.test(password)) {
+      missingRules.push('one number');
+    }
+
+    if (!/[@$!%*#?&^()_\-+=\[\]{};:\'",.<>\/\\|`~]/.test(password)) {
+      missingRules.push('one special character');
+    }
+
+    if (missingRules.length > 0) {
+      result.passwordError =
+        `Password must contain at least ${missingRules.join(', ')}.`;
+      return result;
+    }
+
+    if (password !== confirmPassword) {
+      result.confirmPasswordError = 'Passwords do not match.';
+      return result;
+    }
+
+    result.isValid = true;
+    return result;
+  }
+
 }
