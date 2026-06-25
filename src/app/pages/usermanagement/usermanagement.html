@@ -157,6 +157,9 @@
             </td>
             <td>
               <div class="row-actions">
+                <div class="row-btn" title="Change Password">
+                  <i class="ti ti-lock-password"></i>
+                </div>
                 <div class="row-btn" (click)="openEditModal(user)" title="Edit">
                   <i class="ti ti-edit"></i>
                 </div>
@@ -186,8 +189,8 @@
   </section>
 </div>
 
-<!-- ── Modal ── -->
-<div class="um-overlay" *ngIf="showModal()" (click)="showModal.set(false)">
+<!-- ── upsert user Modal ── -->
+<div class="um-overlay" *ngIf="showModal()">
   <div class="um-modal" (click)="$event.stopPropagation()">
     <div class="um-modal-head">
       <div class="um-modal-icon-wrap">
@@ -197,86 +200,174 @@
         <h4>{{ isEditing() ? 'Edit User' : 'Add New User' }}</h4>
         <p>{{ isEditing() ? 'Update the details below' : 'Fill in details for new user' }}</p>
       </div>
-      <div class="row-btn um-modal-close" (click)="showModal.set(false)">
+      <div class="row-btn um-modal-close" (click)="closeUpsertUserModel()">
         <i class="ti ti-x"></i>
       </div>
     </div>
     <div class="um-modal-body">
-      <div class="um-modal-row">
-        <div class="field">
-          <label>First Name</label>
-          <div class="um-iw">
-            <i class="ti ti-user"></i>
-            <input type="text" placeholder="e.g. Ahmed Raza" [(ngModel)]="editingUser.name" />
+      <form [formGroup]="upsertUserFormGroup">
+        <div class="um-modal-row">
+          <div class="field">
+            <label>First Name<span class="text-danger">*</span></label>
+            <div class="um-iw">
+              <i class="ti ti-user"></i>
+              <input type="text" placeholder="First Name" formControlName="firstName" maxlength="20" appOnlyletterdirective />
+            </div>
+            @if ((upsertUserFormGroup.controls['firstName'].touched && upsertUserFormGroup.controls['firstName'].invalid)) {
+            <div class="field-error">
+              @if (upsertUserFormGroup.controls['firstName'].errors?.['required']) {
+              <span> First Name is required. </span>
+              }
+            </div>
+            }
+          </div>
+          <div class="field">
+            <label>Middle Name</label>
+            <div class="um-iw">
+              <i class="ti ti-user"></i>
+              <input type="text" placeholder="Middle Name" formControlName="middleName" maxlength="20" appOnlyletterdirective />
+            </div>
+          </div>
+          <div class="field">
+            <label>Last Name<span class="text-danger">*</span></label>
+            <div class="um-iw">
+              <i class="ti ti-user"></i>
+              <input type="text" placeholder="Last Name" formControlName="lastName" maxlength="20" appOnlyletterdirective />
+            </div>
+            @if ((upsertUserFormGroup.controls['lastName'].touched && upsertUserFormGroup.controls['lastName'].invalid)) {
+            <div class="field-error">
+              @if (upsertUserFormGroup.controls['lastName'].errors?.['required']) {
+              <span> Last Name is required. </span>
+              }
+            </div>
+            }
+          </div>
+          <div class="um-fgroup">
+            <label for="role">Role<span class="text-danger">*</span></label>
+            <div class="um-fselect">
+              <i class="ti ti-chevron-down um-sel-arrow"></i>
+              <select formControlName="roleId" name="role">
+                <option [ngValue]="null">Select Roles</option>
+                @for (role of userRolesList(); track role.roleId) {
+                <option [ngValue]="role.roleId">
+                  {{ role.roleName }}
+                </option>
+                }
+              </select>
+            </div>
+            @if ((upsertUserFormGroup.controls['roleId'].touched && upsertUserFormGroup.controls['roleId'].invalid)) {
+            <div class="field-error">
+              @if (upsertUserFormGroup.controls['roleId'].errors?.['required']) {
+              <span> Role is required. </span>
+              }
+            </div>
+            }
           </div>
         </div>
-        <div class="field">
-          <label>Middle Name</label>
-          <div class="um-iw">
-            <i class="ti ti-user"></i>
-            <input type="text" placeholder="e.g. Ahmed Raza" [(ngModel)]="editingUser.name" />
+        <div class="um-modal-row">
+          <div class="field">
+            <label>Email Address<span class="text-danger">*</span></label>
+            <div class="um-iw">
+              <i class="ti ti-mail"></i>
+              <input type="email" placeholder="example@gmail.com" formControlName="email" maxlength="49" />
+            </div>
+            @if ((upsertUserFormGroup.controls['email'].touched && upsertUserFormGroup.controls['email'].invalid)|| upsertUserFormGroup.controls['email'].dirty) {
+            <div class="field-error">
+              @if (upsertUserFormGroup.controls['email'].errors?.['required']) {
+              <span> Email address is required. </span>
+              }
+              @if (upsertUserFormGroup.controls['email'].errors?.['pattern']) {
+              <span> Please enter a valid email address. </span>
+              }
+            </div>
+            }
+          </div>
+          <div class="field">
+            <label>Phone Number</label>
+            <div class="um-iw">
+              <i class="ti ti-phone"></i>
+              <input type="email" placeholder="0360-1234567" formControlName="phoneNumber" maxlength="12" appPhonenumber />
+            </div>
+            @if ((upsertUserFormGroup.controls['phoneNumber'].touched && upsertUserFormGroup.controls['phoneNumber'].invalid)) {
+            <div class="field-error">
+              @if (upsertUserFormGroup.controls['phoneNumber'].errors?.['required']) {
+              <span> Phone Number is required. </span>
+              }
+            </div>
+            }
           </div>
         </div>
-        <div class="field">
-          <label>Last Name</label>
-          <div class="um-iw">
-            <i class="ti ti-user"></i>
-            <input type="text" placeholder="e.g. Ahmed Raza" [(ngModel)]="editingUser.name" />
-          </div>
-        </div>
-        <div class="field">
-          <label>Role</label>
-          <select class="form-select" [(ngModel)]="editingUser.role">
-            <option value="Admin">Admin</option>
-            <option value="Manager">Manager</option>
-            <option value="Viewer">Viewer</option>
-          </select>
-        </div>
-      </div>
-      <div class="field">
-        <label>Email Address</label>
-        <div class="um-iw">
-          <i class="ti ti-mail"></i>
-          <input type="email" placeholder="e.g. ahmed@lsms.pk" [(ngModel)]="editingUser.email" />
-        </div>
-      </div>
-      <div class="um-modal-row">
-        <div class="field">
-          <label>Status</label>
-          <select class="form-select" [(ngModel)]="editingUser.status">
-            <option value="Active">Active</option>
-            <option value="Inactive">Inactive</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Gender</label>
-          <select class="form-select" [(ngModel)]="editingUser.status">
-            <option value="Active">Male</option>
-            <option value="Inactive">Female</option>
-          </select>
-        </div>
-      </div>
-      <div class="um-modal-row">
-        <div class="field">
-          <label>Password</label>
-          <div class="um-iw">
-            <i class="ti ti-user"></i>
-            <input type="text" placeholder="e.g. Ahmed Raza" [(ngModel)]="editingUser.name" />
-          </div>
-        </div>
-        <div class="field">
-          <label>Confirm Password</label>
-          <div class="um-iw">
-            <i class="ti ti-user"></i>
-            <input type="text" placeholder="e.g. Ahmed Raza" [(ngModel)]="editingUser.name" />
-          </div>
-        </div>
-      </div>
-    </div>
 
+        <div class="um-modal-row">
+          <div class="um-fgroup">
+            <label>Status</label>
+            <div class="um-fselect">
+              <i class="ti ti-chevron-down um-sel-arrow"></i>
+              <select formControlName="statusId" name="userStatus">
+                <option [ngValue]="null">Select Status</option>
+                @for (status of userStatusList(); track status.statusId) {
+                <option [ngValue]="status.statusId">
+                  {{ status.statusName }}
+                </option>
+                }
+              </select>
+            </div>
+          </div>
+          <div class="um-fgroup">
+            <label for="role">Gender</label>
+            <div class="um-fselect">
+              <i class="ti ti-chevron-down um-sel-arrow"></i>
+              <select formControlName="genderId" name="gender">
+                <option [ngValue]="null">Select Gender</option>
+                @for (gender of genderList(); track gender.genderId) {
+                <option [ngValue]="gender.genderId">{{ gender.genderName }}</option>
+                }
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="um-modal-row">
+          <div class="field">
+            <label>Password<span class="text-danger">*</span></label>
+            <div class="um-iw">
+              <i class="ti ti-lock"></i>
+              <input [type]="showPassword ? 'text' : 'password'" id="password" placeholder="Password" formControlName="password" maxlength="25" (input)="clearErrors()" />
+              <button class="login-eye" type="button" (click)="showPassword = !showPassword">
+                <i class="ti" [ngClass]="showPassword ? 'ti-eye' : 'ti-eye-off'"></i>
+              </button>
+            </div>
+            <div class="field-error" *ngIf="passwordError">
+              <span>
+                {{ passwordError }}
+              </span>
+            </div>
+          </div>
+          <div class="field">
+            <label>Confirm Password<span class="text-danger">*</span></label>
+            <div class="um-iw">
+              <i class="ti ti-lock"></i>
+              <input [type]="showConfirmPassword ? 'text' : 'password'" (keyup.enter)="RegisterUser()" id="confirmPassword" placeholder="Confirm Password" formControlName="confirmPassword" maxlength="25" (input)="clearErrors()" />
+              <button class="login-eye" type="button" (click)="showConfirmPassword = !showConfirmPassword">
+                <i class="ti" [ngClass]="showConfirmPassword ? 'ti-eye' : 'ti-eye-off'"></i>
+              </button>
+            </div>
+            <div class="field-error" *ngIf="confirmPasswordError">
+              {{ confirmPasswordError }}
+            </div>
+          </div>
+          <div class="login-remember ">
+            <label class="login-checkbox">
+              <input type="checkbox" formControlName="isApproved">
+              <span class="login-checkmark"></span>
+              Approve
+            </label>
+          </div>
+        </div>
+      </form>
+    </div>
     <div class="um-modal-foot">
-      <button class="btn-ghost" (click)="showModal.set(false)">Cancel</button>
-      <button class="btn-primary-x" (click)="saveUser()">
+      <button class="btn-ghost" type="button" (click)="closeUpsertUserModel()">Cancel</button>
+      <button class="btn-primary-x" type="button" (click)="RegisterUser()">
         <i class="ti" [ngClass]="isEditing() ? 'ti-device-floppy' : 'ti-user-plus'"></i>
         {{ isEditing() ? 'Save Changes' : 'Add User' }}
       </button>
