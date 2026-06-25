@@ -1,9 +1,15 @@
 // core/interceptors/auth.interceptor.ts
+import { isPlatformBrowser } from '@angular/common';
 import { HttpInterceptorFn } from '@angular/common/http';
+import { inject, PLATFORM_ID } from '@angular/core';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  //   const token = localStorage.getItem('auth_token');
-  const token = '8d2fb2e2-c205-3eb2-ae1b-b4bdb8707b7e';
+  const platformId = inject(PLATFORM_ID);
+
+  let token: string | null = null;
+  if (isPlatformBrowser(platformId)) {
+    token = localStorage.getItem('token');
+  }
 
   if (token) {
     const cloned = req.clone({

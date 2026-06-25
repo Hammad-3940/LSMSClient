@@ -1,6 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, computed, ElementRef, HostListener, inject, OnInit, signal, ViewChild } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+import { MiscellaneousService } from '../../core/services/miscellaneous.service';
+import { UserManagementService } from '../../core/services/usermanagement.service';
+import { CommonService } from '../../shared/common.service';
 
 export interface User {
   id: number;
@@ -14,18 +18,34 @@ export interface User {
 
 @Component({
   selector: 'app-usermanagement',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './usermanagement.html',
   styleUrl: './usermanagement.scss',
 })
-export class UserManagementComponent {
+export class UserManagementComponent implements OnInit {
+  @ViewChild('pageSizeDropdown') pageSizeDropdown!: ElementRef;
+  userRolesList = signal<any[]>([]);
+  genderList = signal<any[]>([]);
+  userStatusList = signal<any[]>([]);
+  userList = signal<any[]>([]);
+  currentPage = signal<number>(1);
+  pageSize = signal<number>(10);
+  totalRecords = signal<number>(0);
+  pageSizeOptions = [10, 25, 50, 100];
+  pageSizeMenuOpen = signal(false);
+
+  private miscellaneousService = inject(MiscellaneousService);
+  private userManagementService = inject(UserManagementService);
+  private toastr = inject(ToastrService);
+  private commonService = inject(CommonService);
+
+  getUserInfoFormGroup!: FormGroup;
+
   searchQuery = signal('');
   selectedRole = signal('All');
   selectedStatus = signal('All');
   showModal = signal(false);
   isEditing = signal(false);
-  currentPage = signal(1);
-  pageSize = 8;
   searchName = signal('');
   searchEmail = signal('');
 
@@ -47,18 +67,126 @@ export class UserManagementComponent {
     { id: 10, name: 'Nadia Iqbal', email: 'nadia@lsms.pk', role: 'Manager', status: 'Inactive', createdAt: '2024-06-10' },
   ]);
 
-  paginatedUsers = computed(() => {
-    const start = (this.currentPage() - 1) * this.pageSize;
-    return this.filteredUsers().slice(start, start + this.pageSize);
-  });
+  constructor(private formbuilder: FormBuilder, private elementRef: ElementRef) { }
 
-  totalPages = computed(() =>
-    Math.ceil(this.filteredUsers().length / this.pageSize)
-  );
-
-  get pageNumbers(): number[] {
-    return Array.from({ length: this.totalPages() }, (_, i) => i + 1);
+  ngOnInit() {
+    this.GetGender();
+    this.GetUserRole();
+    this.GetUserStatus();
+    this.GetUserInformationFormGroup();
+    this.GetUsersInformation();
   }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    if (this.pageSizeMenuOpen() && this.pageSizeDropdown && !this.pageSizeDropdown.nativeElement.contains(event.target)) {
+      this.pageSizeMenuOpen.set(false);
+    }
+  }
+
+  GetUserInformationFormGroup() {
+    this.getUserInfoFormGroup = this.formbuilder.group({
+      fullName: new FormControl(''),
+      email: new FormControl(''),
+      statusId: new FormControl(0),
+      genderId: new FormControl(0),
+      roleId: new FormControl(0),
+      pageNumber: new FormControl(1),
+      numberOfRecords: new FormControl(10),
+    });
+  }
+
+  GetUsersInformation(reset?: boolean) {
+    if (reset) this.GetUserInformationFormGroup();
+    this.userManagementService.GetUsersInformation(this.getUserInfoFormGroup.value).subscribe({
+      next: (res) => {
+        if (res?.success && !this.commonService.isNullOrEmpty(res?.data) && res?.data?.length > 0) {
+          this.userList.set(res.data);
+          this.totalRecords.set(res.data[0].totalRecords);
+        } else {
+          this.userList.set([]);
+          this.totalRecords.set(0);
+        }
+      }
+    });
+  }
+
+  GetGender() {
+    this.miscellaneousService.GetGender().subscribe({
+      next: (res) => {
+        if (res?.success && !this.commonService.isNullOrEmpty(res?.data) && res?.data?.length > 0) {
+          this.genderList.set(res.data);
+        } else {
+          this.genderList.set([]);
+        }
+      }
+    });
+  }
+
+  GetUserStatus() {
+    this.miscellaneousService.GetUserStatus().subscribe({
+      next: (res) => {
+        if (res?.success && !this.commonService.isNullOrEmpty(res?.data) && res?.data?.length > 0) {
+          this.userStatusList.set(res.data);
+        } else {
+          this.userStatusList.set([]);
+        }
+      }
+    });
+  }
+
+  GetUserRole() {
+    this.miscellaneousService.GetUserRole().subscribe({
+      next: (res) => {
+        if (res?.success && !this.commonService.isNullOrEmpty(res?.data) && res?.data?.length > 0) {
+          this.userRolesList.set(res.data);
+        } else {
+          this.userRolesList.set([]);
+        }
+      }
+    });
+  }
+
+  setPage(page: number) {
+    if (page < 1 || page > this.totalPages()) return; // disabled clicks ko ignore karega
+
+    this.currentPage.set(page);
+    this.getUserInfoFormGroup.patchValue({ pageNumber: page });
+    this.GetUsersInformation();
+  }
+
+  togglePageSizeMenu() {
+    this.pageSizeMenuOpen.set(!this.pageSizeMenuOpen());
+  }
+
+  setPageSize(size: number) {
+    this.pageSize.set(size);
+    this.currentPage.set(1);
+    this.pageSizeMenuOpen.set(false);
+
+    this.getUserInfoFormGroup.patchValue({
+      numberOfRecords: size,
+      pageNumber: 1
+    });
+    this.GetUsersInformation();
+  }
+
+  totalPages = computed(() => Math.ceil(this.totalRecords() / this.pageSize()) || 1);
+
+  pageNumbers = computed(() => {
+    const total = this.totalPages();
+    const current = this.currentPage();
+    const delta = 2; // current ke aage/peechay kitne page numbers dikhane hain
+    const pages: number[] = [];
+
+    let start = Math.max(1, current - delta);
+    let end = Math.min(total, current + delta);
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+    return pages;
+  });
 
   openAddModal() {
     this.isEditing.set(false);
@@ -106,10 +234,6 @@ export class UserManagementComponent {
     );
   }
 
-  setPage(page: number) {
-    if (page >= 1 && page <= this.totalPages()) this.currentPage.set(page);
-  }
-
   roleBadge(role: string): string {
     return { Admin: 's-quar', Manager: 's-sale', Viewer: 's-active' }[role] ?? 's-active';
   }
@@ -122,13 +246,10 @@ export class UserManagementComponent {
     return this.users().filter(u => u.status === status).length;
   }
 
-  roleIcon(role: string): string {
-    return { Admin: 'ti-shield-star', Manager: 'ti-briefcase', Viewer: 'ti-eye' }[role] ?? 'ti-user';
-  }
-
   min(a: number, b: number): number {
     return Math.min(a, b);
   }
+
   filteredUsers = computed(() => {
     return this.users().filter(u => {
       const matchName = u.name.toLowerCase().includes(this.searchName().toLowerCase());

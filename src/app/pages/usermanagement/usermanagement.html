@@ -14,66 +14,79 @@
     </div>
 
     <div class="um-filter-row">
+      <form [formGroup]="getUserInfoFormGroup">
 
-      <div class="um-fgroup">
-        <label>Name</label>
-        <div class="um-finput">
-          <i class="ti ti-user"></i>
-          <input type="text"
-                 placeholder="Search by name…"
-                 [ngModel]="searchName()"
-                 (ngModelChange)="searchName.set($event); currentPage.set(1)" />
+        <div class="um-fgroup">
+          <label>Name</label>
+          <div class="um-finput">
+            <i class="ti ti-user"></i>
+            <input type="text" formControlName="fullName" maxlength="40" placeholder="Search by name…" />
+          </div>
         </div>
-      </div>
 
-      <div class="um-fgroup">
-        <label>Email</label>
-        <div class="um-finput">
-          <i class="ti ti-mail"></i>
-          <input type="text"
-                 placeholder="Search by email…"
-                 [ngModel]="searchEmail()"
-                 (ngModelChange)="searchEmail.set($event); currentPage.set(1)" />
+        <div class="um-fgroup">
+          <label>Email</label>
+          <div class="um-finput">
+            <i class="ti ti-mail"></i>
+            <input type="text" formControlName="email" maxlength="40" placeholder="Search by email…" />
+          </div>
         </div>
-      </div>
 
-      <div class="um-fgroup">
-        <label>Role</label>
-        <div class="um-fselect">
-          <i class="ti ti-chevron-down um-sel-arrow"></i>
-          <select [ngModel]="selectedRole()" (ngModelChange)="selectedRole.set($event); currentPage.set(1)">
-            <option value="All">All Roles</option>
-            <option value="Admin">Admin</option>
-            <option value="Manager">Manager</option>
-            <option value="Viewer">Viewer</option>
-          </select>
+        <div class="um-fgroup">
+          <label for="role">Role</label>
+          <div class="um-fselect">
+            <i class="ti ti-chevron-down um-sel-arrow"></i>
+            <select formControlName="roleId" name="role" (change)="GetUsersInformation()">
+              <option [ngValue]="0">All Roles</option>
+              @for (role of userRolesList(); track role.roleId) {
+              <option [ngValue]="role.roleId">
+                {{ role.roleName }}
+              </option>
+              }
+            </select>
+          </div>
         </div>
-      </div>
 
-      <div class="um-fgroup">
-        <label>Status</label>
-        <div class="um-fselect">
-          <i class="ti ti-chevron-down um-sel-arrow"></i>
-          <select [ngModel]="selectedStatus()" (ngModelChange)="selectedStatus.set($event); currentPage.set(1)">
-            <option value="All">All Status</option>
-            <option value="Active">Active</option>
-            <option value="Inactive">Inactive</option>
-          </select>
+        <div class="um-fgroup">
+          <label for="userStatus">Status</label>
+          <div class="um-fselect">
+            <i class="ti ti-chevron-down um-sel-arrow"></i>
+            <select formControlName="statusId" name="userStatus" (change)="GetUsersInformation()">
+              <option [ngValue]="0">All Status</option>
+              @for (status of userStatusList(); track status.statusId) {
+              <option [ngValue]="status.statusId">
+                {{ status.statusName }}
+              </option>
+              }
+            </select>
+          </div>
         </div>
-      </div>
 
-      <div class="um-fgroup um-fgroup-btn">
-        <label>&nbsp;</label>
-        <div class="um-fbtn-row">
-          <button class="btn-primary-x" (click)="applyFilters()">
-            <i class="ti ti-search"></i> Search
-          </button>
-          <button class="btn-ghost um-clear-btn" (click)="clearFilters()" title="Reset">
-            <i class="ti ti-rotate"></i>
-          </button>
+        <div class="um-fgroup">
+          <label for="gender">Gender</label>
+          <div class="um-fselect">
+            <i class="ti ti-chevron-down um-sel-arrow"></i>
+            <select formControlName="genderId" name="gender" (change)="GetUsersInformation()">
+              <option [ngValue]="0">All Gender</option>
+              @for (gender of genderList(); track gender.genderId) {
+              <option [ngValue]="gender.genderId">{{ gender.genderName }}</option>
+              }
+            </select>
+          </div>
         </div>
-      </div>
 
+        <div class="um-fgroup um-fgroup-btn">
+          <label>&nbsp;</label>
+          <div class="um-fbtn-row">
+            <button class="btn-primary-x" (click)="GetUsersInformation()">
+              <i class="ti ti-search"></i> Search
+            </button>
+            <button class="btn-ghost um-clear-btn" (click)="GetUsersInformation(true)" title="Reset">
+              <i class="ti ti-rotate"></i>
+            </button>
+          </div>
+        </div>
+      </form>
     </div>
   </div>
 
@@ -87,7 +100,7 @@
       <div class="um-panel-chips">
         <span class="um-chip">
           <span class="um-chip-dot cd-total"></span>
-          {{ users().length }} Total
+          {{ userList().length }} Total
         </span>
         <span class="um-chip">
           <span class="um-chip-dot cd-active"></span>
@@ -108,38 +121,37 @@
             <th style="width:22%">Email</th>
             <th style="width:13%">Role</th>
             <th style="width:13%">Status</th>
-            <th style="width:13%">Joined</th>
-            <th style="width:11%"></th>
+            <th style="width:13%">Gender</th>
+            <th style="width:11%">Action</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let user of paginatedUsers()">
+          <tr *ngFor="let user of userList()">
             <td>
               <div class="animal-cell">
-                <div class="um-av" [ngClass]="'av-' + user.name.charAt(0).toLowerCase()">
-                  {{ user.name.charAt(0) }}
+                <div class="um-av" [ngClass]="'av-' + user.fullName.charAt(0).toLowerCase()">
+                  {{ user.fullName.charAt(0) }}
                 </div>
                 <div>
-                  <div class="animal-name">{{ user.name }}</div>
-                  <div class="animal-id">#U-{{ user.id | number:'4.0-0' }}</div>
+                  <div class="animal-name">{{ user.fullName }}</div>
+                  <div class="animal-id">#U-{{ user.userIdWithoutServerId | number:'3.0-0' }}</div>
                 </div>
               </div>
             </td>
-            <td style="color:var(--muted);font-size:12.5px">{{ user.email }}</td>
+            <td>{{ user.email }}</td>
             <td>
-              <span class="um-rbadge" [ngClass]="'rb-' + user.role.toLowerCase()">
-                <i class="ti" [ngClass]="roleIcon(user.role)"></i>
-                {{ user.role }}
+              <span>
+                {{ user.roleName }}
               </span>
             </td>
             <td>
               <span class="um-sbadge cursor-pointer"
-                    [class.sb-on]="user.status === 'Active'"
-                    [class.sb-off]="user.status === 'Inactive'"
-                    (click)="toggleStatus(user)"><span class="um-dot"></span>{{ user.status }}</span>
+                    [class.sb-on]="user.statusName === 'Active'"
+                    [class.sb-off]="user.statusName === 'Inactive'"
+                    (click)="toggleStatus(user)"><span class="um-dot"></span>{{ user.statusName }}</span>
             </td>
-            <td style="color:var(--faint);font-size:12px;font-variant-numeric:tabular-nums">
-              {{ user.createdAt }}
+            <td>
+              {{ user.genderName }}
             </td>
             <td>
               <div class="row-actions">
@@ -152,7 +164,7 @@
               </div>
             </td>
           </tr>
-          <tr *ngIf="paginatedUsers().length === 0">
+          <tr *ngIf="userList().length === 0">
             <td colspan="6" class="um-empty">
               <i class="ti ti-users-off"></i>
               <span>No users found</span>
@@ -164,19 +176,39 @@
 
     <div class="pager">
       <span>
-        Showing {{ (currentPage()-1)*pageSize + 1 }}–{{ min(currentPage()*pageSize, filteredUsers().length) }}
-        of {{ filteredUsers().length }}
+        Showing {{ (currentPage()-1)*pageSize() + 1 }}–{{ min(currentPage()*pageSize(), totalRecords()) }}
+        of {{ totalRecords() }}
       </span>
-      <div class="page-btns">
-        <div class="page-btn" (click)="setPage(currentPage()-1)" [class.disabled]="currentPage()===1">
-          <i class="ti ti-chevron-left"></i>
+
+      <div class="pager-right">
+        <div class="ps-wrap" #pageSizeDropdown>
+          <span class="ps-label">Rows per page</span>
+          <div class="ps-select"
+               (click)="togglePageSizeMenu(); $event.stopPropagation()"
+               [class.open]="pageSizeMenuOpen()">
+            <span>{{ pageSize() }}</span>
+            <i class="ti ti-chevron-down"></i>
+            <div class="ps-menu" *ngIf="pageSizeMenuOpen()">
+              <div class="ps-opt" *ngFor="let size of pageSizeOptions"
+                   [class.sel]="size === pageSize()"
+                   (click)="setPageSize(size); $event.stopPropagation()">
+                {{ size }}
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="page-btn"
-             *ngFor="let p of pageNumbers"
-             [class.current]="p===currentPage()"
-             (click)="setPage(p)">{{ p }}</div>
-        <div class="page-btn" (click)="setPage(currentPage()+1)" [class.disabled]="currentPage()===totalPages()">
-          <i class="ti ti-chevron-right"></i>
+
+        <div class="page-btns">
+          <div class="page-btn" (click)="setPage(currentPage()-1)" [class.disabled]="currentPage()===1">
+            <i class="ti ti-chevron-left"></i>
+          </div>
+          <div class="page-btn"
+               *ngFor="let p of pageNumbers()"
+               [class.current]="p===currentPage()"
+               (click)="setPage(p)">{{ p }}</div>
+          <div class="page-btn" (click)="setPage(currentPage()+1)" [class.disabled]="currentPage()===totalPages()">
+            <i class="ti ti-chevron-right"></i>
+          </div>
         </div>
       </div>
     </div>

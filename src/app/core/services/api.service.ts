@@ -9,18 +9,19 @@ export class ApiService {
   private http = inject(HttpClient);
   private baseUrl = environment.apiUrl;
 
-  get<T>(endpoint: string): Observable<ApiResponse<T>> {
-    return this.http.get<ApiResponse<T>>(`${this.baseUrl}/${endpoint}`);
+  get<T = any>(endpoint: string) {
+    return this.http.get<any>(`${this.baseUrl}/${endpoint}`);
   }
 
   post<T = any>(endpoint: string, body: any) {
     return this.http.post<any>(`${this.baseUrl}/${endpoint}`, body);
   }
-  put<T>(endpoint: string, body: any): Observable<ApiResponse<T>> {
-    return this.http.put<ApiResponse<T>>(`${this.baseUrl}/${endpoint}`, body);
+
+  put<T = any>(endpoint: string, body: any) {
+    return this.http.put<any>(`${this.baseUrl}/${endpoint}`, body);
   }
 
-  delete<T>(endpoint: string): Observable<ApiResponse<T>> {
-    return this.http.delete<ApiResponse<T>>(`${this.baseUrl}/${endpoint}`);
+  delete<T = any>(endpoint: string) {
+    return this.http.delete<any>(`${this.baseUrl}/${endpoint}`);
   }
 }

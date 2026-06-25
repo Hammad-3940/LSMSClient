@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, inject, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ForgotpasswordService } from '../../core/services/forgotpassword.service';
 import { CommonService } from '../../shared/common.service';
@@ -21,7 +21,6 @@ export class ForgotpasswordComponent implements OnInit, AfterViewInit {
   private forgotpasswordService = inject(ForgotpasswordService);
   private toastr = inject(ToastrService);
   private commonService = inject(CommonService);
-  private route = inject(ActivatedRoute);
 
   forgotForm!: FormGroup;
   otpForm!: FormGroup;
