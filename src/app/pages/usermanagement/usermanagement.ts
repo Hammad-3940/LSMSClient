@@ -10,15 +10,6 @@ import { Phonenumberdirective } from '../../shared/directives/phonenumberdirecti
 import { PaginationComponent } from '../../shared/paginationcomponent/paginationcomponent';
 import { PhoneFormatPipe } from '../../shared/pipes/phone-format-pipe';
 
-export interface User {
-  id: number;
-  name: string;
-  email: string;
-  role: 'Admin' | 'Manager' | 'Viewer';
-  status: 'Active' | 'Inactive';
-  createdAt: string;
-}
-
 @Component({
   selector: 'app-usermanagement',
   imports: [CommonModule, FormsModule, ReactiveFormsModule, PaginationComponent, Onlyletterdirective, Phonenumberdirective],
@@ -29,6 +20,7 @@ export interface User {
 
 export class UserManagementComponent implements OnInit {
   @ViewChild('userFirstName') userFirstName!: ElementRef<HTMLInputElement>;
+  @ViewChild('password') password!: ElementRef<HTMLInputElement>;
   userRolesList = signal<any[]>([]);
   genderList = signal<any[]>([]);
   userStatusList = signal<any[]>([]);
@@ -46,14 +38,16 @@ export class UserManagementComponent implements OnInit {
   getUserInfoFormGroup!: FormGroup;
   upsertUserFormGroup!: FormGroup;
 
+  userFullName: string = '';
+  userEmail: string = '';
   passwordError: string = '';
   confirmPasswordError: string = '';
   showPassword = false;
   showConfirmPassword = false;
 
-  showModal = signal(false);
+  showUpsertUserModal = signal(false);
+  showUpdatePasswordModal = signal(false);
   isEditing = signal(false);
-  editingUser: Partial<User> = {};
 
   constructor(private formbuilder: FormBuilder, private elementRef: ElementRef, private phoneFormatPipe: PhoneFormatPipe) { }
 
@@ -169,11 +163,12 @@ export class UserManagementComponent implements OnInit {
   }
 
   openAddModal() {
+    this.resetPasswordValidations();
     setTimeout(() => {
       this.userFirstName.nativeElement.focus();
     }, 100);
     this.isEditing.set(false);
-    this.showModal.set(true);
+    this.showUpsertUserModal.set(true);
     this.upsertUserFormGroup.get('email')?.enable();
   }
 
@@ -183,11 +178,11 @@ export class UserManagementComponent implements OnInit {
       phoneNumber: this.phoneFormatPipe.transform(user.phoneNumber)
     });
     this.isEditing.set(true);
-    this.showModal.set(true);
+    this.showUpsertUserModal.set(true);
     this.upsertUserFormGroup.get('email')?.disable();
     setTimeout(() => {
       this.userFirstName.nativeElement.focus();
-    }, 300);
+    }, 100);
   }
 
   RegisterUser() {
@@ -214,10 +209,9 @@ export class UserManagementComponent implements OnInit {
         next: (res) => {
           if (res.success) {
             this.toastr.success(res?.responseMessage);
-            this.showModal.set(false);
+            this.closeModal('updatePassword');
             this.GetUsersInformation(true);
             this.clearErrors();
-            this.upsertUserFormGroup.reset();
           } else {
             this.toastr.error(res.responseMessage);
           }
@@ -227,7 +221,6 @@ export class UserManagementComponent implements OnInit {
   }
 
   UpdateUser() {
-    debugger
     if (this.upsertUserFormGroup.invalid) {
       this.upsertUserFormGroup.markAllAsTouched();
       return;
@@ -243,9 +236,8 @@ export class UserManagementComponent implements OnInit {
         next: (res) => {
           if (res.success) {
             this.toastr.success(res?.responseMessage);
-            this.showModal.set(false);
+            this.closeModal('upsertUser');
             this.GetUsersInformation(true);
-            this.upsertUserFormGroup.reset();
           } else {
             this.toastr.error(res.responseMessage);
           }
@@ -254,14 +246,65 @@ export class UserManagementComponent implements OnInit {
 
   }
 
-  closeUpsertUserModel() {
-    this.showModal.set(false);
-    this.upsertUserFormGroup.reset();
+  closeModal(modal: string) {
+    if (modal == 'upsertUser') {
+      this.showUpsertUserModal.set(false);
+      this.upsertUserFormGroup.reset();
+    }
+    if (modal == 'updatePassword') {
+      this.showUpdatePasswordModal.set(false);
+    }
+
   }
 
   clearErrors(): void {
     this.passwordError = '';
     this.confirmPasswordError = '';
+  }
+
+  openUpdatePasswordModal(user: any) {
+    this.resetPasswordValidations();
+    this.showUpdatePasswordModal.set(true);
+    this.userEmail = user?.email;
+    this.userFullName = user?.fullName;
+    setTimeout(() => {
+      this.password.nativeElement.focus();
+    }, 100);
+  }
+
+  ChangePassword(password: string, confirmPassword: string) {
+    const validation = this.commonService.validatePassword(password, confirmPassword);
+
+    if (!validation.isValid) {
+      this.passwordError = validation?.passwordError;
+      this.confirmPasswordError = validation?.confirmPasswordError;
+      return
+    }
+
+    const payload = {
+      email: this.userEmail,
+      password: password,
+      confirmPassword: confirmPassword,
+    };
+
+    this.userManagementService.ChangePassword(payload)
+      .subscribe({
+        next: (res) => {
+          if (res.success) {
+            this.toastr.success(res?.responseMessage);
+            this.closeModal('updatePassword');
+            this.GetUsersInformation(true);
+          } else {
+            this.toastr.error(res.responseMessage);
+          }
+        }
+      });
+  }
+
+  resetPasswordValidations() {
+    this.clearErrors();
+    this.showPassword = false;
+    this.showConfirmPassword = false;
   }
 
   deleteUser(id: number) {
