@@ -163,7 +163,7 @@
                 <div class="row-btn" (click)="openEditModal(user)" title="Edit">
                   <i class="ti ti-edit"></i>
                 </div>
-                <div class="row-btn danger" (click)="deleteUser(user.id)" title="Delete">
+                <div class="row-btn danger" (click)="deleteUser(user)" title="Delete">
                   <i class="ti ti-trash"></i>
                 </div>
               </div>
@@ -448,3 +448,35 @@
   </div>
 </div>
  }
+
+<!-- ── Delete User Modal ── -->
+@if(showDeleteModal()){
+<div class="um-overlay">
+  <div class="um-modal um-modal-sm" (click)="$event.stopPropagation()">
+    <div class="um-modal-head">
+      <div class="um-modal-icon-wrap um-icon-danger">
+        <i class="ti ti-trash"></i>
+      </div>
+      <div class="um-modal-titles">
+        <h4>Delete User</h4>
+      </div>
+      <div class="row-btn um-modal-close" (click)="closeModal('delete')">
+        <i class="ti ti-x"></i>
+      </div>
+    </div>
+    <div class="um-modal-body">
+      <p class="um-confirm-text">
+        Are you sure you want to delete
+        <strong class="text-danger">{{userFullName}}</strong>? All data associated with this user will be permanently removed.
+      </p>
+    </div>
+    <div class="um-modal-foot">
+      <button class="btn-ghost" type="button" (click)="closeModal('delete')">Cancel</button>
+      <button class="btn-danger-x" type="button" (click)="confirmDeleteUser()">
+        <i class="ti ti-trash"></i>
+        Delete User
+      </button>
+    </div>
+  </div>
+</div>
+}

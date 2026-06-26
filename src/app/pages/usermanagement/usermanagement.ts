@@ -47,6 +47,7 @@ export class UserManagementComponent implements OnInit {
 
   showUpsertUserModal = signal(false);
   showUpdatePasswordModal = signal(false);
+  showDeleteModal = signal(false);
   isEditing = signal(false);
 
   constructor(private formbuilder: FormBuilder, private elementRef: ElementRef, private phoneFormatPipe: PhoneFormatPipe) { }
@@ -254,7 +255,9 @@ export class UserManagementComponent implements OnInit {
     if (modal == 'updatePassword') {
       this.showUpdatePasswordModal.set(false);
     }
-
+    if (modal == 'delete') {
+      this.showDeleteModal.set(false);
+    }
   }
 
   clearErrors(): void {
@@ -307,6 +310,25 @@ export class UserManagementComponent implements OnInit {
     this.showConfirmPassword = false;
   }
 
-  deleteUser(id: number) {
+  deleteUser(user: any) {
+    this.showDeleteModal.set(true);
+    this.userEmail = user?.email;
+    this.userFullName = user?.fullName;
+  }
+
+  confirmDeleteUser() {
+    if (this.commonService.isNullOrEmpty(this.userEmail)) this.toastr.error("Email is required.");
+    this.userManagementService.DeleteUser(this.userEmail)
+      .subscribe({
+        next: (res) => {
+          if (res.success) {
+            this.toastr.success(res?.responseMessage);
+            this.closeModal('delete');
+            this.GetUsersInformation(true);
+          } else {
+            this.toastr.error(res.responseMessage);
+          }
+        }
+      });
   }
 }

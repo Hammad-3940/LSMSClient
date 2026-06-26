@@ -2006,3 +2006,38 @@ table.lp tbody td {
   border-top: 1px solid var(--border);
   background: var(--surface-2);
 }
+
+.um-icon-danger {
+  background: linear-gradient(135deg, #fee2e2, #fecaca);
+  border: 1px solid rgba(220, 38, 38, 0.12);
+}
+.um-icon-danger i {
+  color: #dc2626;
+}
+
+.btn-danger-x {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 38px;
+  padding: 0 16px;
+  border: none;
+  border-radius: var(--radius-xs);
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  background: linear-gradient(135deg, #ef4444, #b91c1c);
+  box-shadow: 0 3px 10px rgba(185, 28, 28, 0.3);
+  transition: transform 0.12s, box-shadow 0.12s, filter 0.12s;
+}
+.btn-danger-x i {
+  font-size: 14px;
+}
+.btn-danger-x:hover {
+  filter: brightness(1.05);
+  box-shadow: 0 5px 16px rgba(185, 28, 28, 0.38);
+}
+.btn-danger-x:active {
+  transform: translateY(1px);
+}

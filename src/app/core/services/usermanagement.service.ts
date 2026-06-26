@@ -19,8 +19,8 @@ export class UserManagementService {
     return this.api.post<any>('User/UpdateUser', request);
   }
 
-  DeleteUser(request: any) {
-    return this.api.post<any>('User/DeleteUser', request);
+  DeleteUser(email: string) {
+    return this.api.post<any>(`User/DeleteUser?email=${encodeURIComponent(email)}`, {});
   }
 
   ChangePassword(request: any) {
