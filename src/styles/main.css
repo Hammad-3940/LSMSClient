@@ -812,6 +812,10 @@ table.lp tbody td {
   color: red;
 }
 
+.disabled {
+  background: var(--surface-2);
+}
+
 .modal-content {
   border: 1px solid var(--border);
   border-radius: var(--radius);

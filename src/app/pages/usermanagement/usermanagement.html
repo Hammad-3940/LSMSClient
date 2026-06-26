@@ -190,7 +190,8 @@
 </div>
 
 <!-- ── upsert user Modal ── -->
-<div class="um-overlay" *ngIf="showModal()">
+ @if(showModal()){
+<div class="um-overlay">
   <div class="um-modal" (click)="$event.stopPropagation()">
     <div class="um-modal-head">
       <div class="um-modal-icon-wrap">
@@ -211,7 +212,7 @@
             <label>First Name<span class="text-danger">*</span></label>
             <div class="um-iw">
               <i class="ti ti-user"></i>
-              <input type="text" placeholder="First Name" formControlName="firstName" maxlength="20" appOnlyletterdirective />
+              <input type="text" placeholder="First Name" formControlName="firstName" maxlength="20" appOnlyletterdirective #userFirstName tabindex="1" />
             </div>
             @if ((upsertUserFormGroup.controls['firstName'].touched && upsertUserFormGroup.controls['firstName'].invalid)) {
             <div class="field-error">
@@ -225,14 +226,14 @@
             <label>Middle Name</label>
             <div class="um-iw">
               <i class="ti ti-user"></i>
-              <input type="text" placeholder="Middle Name" formControlName="middleName" maxlength="20" appOnlyletterdirective />
+              <input type="text" placeholder="Middle Name" formControlName="middleName" maxlength="20" appOnlyletterdirective tabindex="2" />
             </div>
           </div>
           <div class="field">
             <label>Last Name<span class="text-danger">*</span></label>
             <div class="um-iw">
               <i class="ti ti-user"></i>
-              <input type="text" placeholder="Last Name" formControlName="lastName" maxlength="20" appOnlyletterdirective />
+              <input type="text" placeholder="Last Name" formControlName="lastName" maxlength="20" appOnlyletterdirective tabindex="3" />
             </div>
             @if ((upsertUserFormGroup.controls['lastName'].touched && upsertUserFormGroup.controls['lastName'].invalid)) {
             <div class="field-error">
@@ -246,7 +247,7 @@
             <label for="role">Role<span class="text-danger">*</span></label>
             <div class="um-fselect">
               <i class="ti ti-chevron-down um-sel-arrow"></i>
-              <select formControlName="roleId" name="role">
+              <select formControlName="roleId" name="role" tabindex="4">
                 <option [ngValue]="null">Select Roles</option>
                 @for (role of userRolesList(); track role.roleId) {
                 <option [ngValue]="role.roleId">
@@ -267,9 +268,9 @@
         <div class="um-modal-row">
           <div class="field">
             <label>Email Address<span class="text-danger">*</span></label>
-            <div class="um-iw">
+            <div class="um-iw" [ngClass]="{ 'disabled': upsertUserFormGroup.get('email')?.disabled }">
               <i class="ti ti-mail"></i>
-              <input type="email" placeholder="example@gmail.com" formControlName="email" maxlength="49" />
+              <input type="email" placeholder="example@gmail.com" formControlName="email" maxlength="49" tabindex="5" />
             </div>
             @if ((upsertUserFormGroup.controls['email'].touched && upsertUserFormGroup.controls['email'].invalid)|| upsertUserFormGroup.controls['email'].dirty) {
             <div class="field-error">
@@ -283,10 +284,10 @@
             }
           </div>
           <div class="field">
-            <label>Phone Number</label>
+            <label>Phone Number<span class="text-danger">*</span></label>
             <div class="um-iw">
               <i class="ti ti-phone"></i>
-              <input type="email" placeholder="0360-1234567" formControlName="phoneNumber" maxlength="12" appPhonenumber />
+              <input type="email" placeholder="0360-1234567" formControlName="phoneNumber" maxlength="12" appPhonenumber tabindex="6" />
             </div>
             @if ((upsertUserFormGroup.controls['phoneNumber'].touched && upsertUserFormGroup.controls['phoneNumber'].invalid)) {
             <div class="field-error">
@@ -303,7 +304,7 @@
             <label>Status</label>
             <div class="um-fselect">
               <i class="ti ti-chevron-down um-sel-arrow"></i>
-              <select formControlName="statusId" name="userStatus">
+              <select formControlName="statusId" name="userStatus" tabindex="7">
                 <option [ngValue]="null">Select Status</option>
                 @for (status of userStatusList(); track status.statusId) {
                 <option [ngValue]="status.statusId">
@@ -317,7 +318,7 @@
             <label for="role">Gender</label>
             <div class="um-fselect">
               <i class="ti ti-chevron-down um-sel-arrow"></i>
-              <select formControlName="genderId" name="gender">
+              <select formControlName="genderId" name="gender " tabindex="8">
                 <option [ngValue]="null">Select Gender</option>
                 @for (gender of genderList(); track gender.genderId) {
                 <option [ngValue]="gender.genderId">{{ gender.genderName }}</option>
@@ -326,48 +327,54 @@
             </div>
           </div>
         </div>
+        @if(!this.isEditing()){
         <div class="um-modal-row">
           <div class="field">
             <label>Password<span class="text-danger">*</span></label>
             <div class="um-iw">
               <i class="ti ti-lock"></i>
-              <input [type]="showPassword ? 'text' : 'password'" id="password" placeholder="Password" formControlName="password" maxlength="25" (input)="clearErrors()" />
+              <input [type]="showPassword ? 'text' : 'password'" id="password" placeholder="Password" formControlName="password" maxlength="25" (input)="clearErrors()" tabindex="" tabindex="9" />
               <button class="login-eye" type="button" (click)="showPassword = !showPassword">
                 <i class="ti" [ngClass]="showPassword ? 'ti-eye' : 'ti-eye-off'"></i>
               </button>
             </div>
-            <div class="field-error" *ngIf="passwordError">
+            @if(passwordError){
+            <div class="field-error">
               <span>
                 {{ passwordError }}
               </span>
             </div>
+            }
           </div>
           <div class="field">
             <label>Confirm Password<span class="text-danger">*</span></label>
             <div class="um-iw">
               <i class="ti ti-lock"></i>
-              <input [type]="showConfirmPassword ? 'text' : 'password'" (keyup.enter)="RegisterUser()" id="confirmPassword" placeholder="Confirm Password" formControlName="confirmPassword" maxlength="25" (input)="clearErrors()" />
+              <input [type]="showConfirmPassword ? 'text' : 'password'" (keyup.enter)="RegisterUser()" id="confirmPassword" placeholder="Confirm Password" formControlName="confirmPassword" maxlength="25" (input)="clearErrors()" tabindex="10" />
               <button class="login-eye" type="button" (click)="showConfirmPassword = !showConfirmPassword">
                 <i class="ti" [ngClass]="showConfirmPassword ? 'ti-eye' : 'ti-eye-off'"></i>
               </button>
             </div>
-            <div class="field-error" *ngIf="confirmPasswordError">
+            @if(confirmPasswordError){
+            <div class="field-error">
               {{ confirmPasswordError }}
             </div>
+            }
           </div>
-          <div class="login-remember ">
-            <label class="login-checkbox">
-              <input type="checkbox" formControlName="isApproved">
-              <span class="login-checkmark"></span>
-              Approve
-            </label>
-          </div>
+        </div>
+        }
+        <div class="login-remember m-1 ">
+          <label class="login-checkbox">
+            <input type="checkbox" formControlName="isApproved">
+            <span class="login-checkmark"></span>
+            Approve
+          </label>
         </div>
       </form>
     </div>
     <div class="um-modal-foot">
-      <button class="btn-ghost" type="button" (click)="closeUpsertUserModel()">Cancel</button>
-      <button class="btn-primary-x" type="button" (click)="RegisterUser()">
+      <button class="btn-ghost" type="button" (click)="closeUpsertUserModel()" tabindex="11">Cancel</button>
+      <button class="btn-primary-x" type="button" (click)="isEditing() ? UpdateUser() : RegisterUser()" tabindex="12">
         <i class="ti" [ngClass]="isEditing() ? 'ti-device-floppy' : 'ti-user-plus'"></i>
         {{ isEditing() ? 'Save Changes' : 'Add User' }}
       </button>
@@ -375,3 +382,4 @@
 
   </div>
 </div>
+ }

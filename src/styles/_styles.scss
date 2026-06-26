@@ -828,6 +828,10 @@ table.lp {
   color: red;
 }
 
+.disabled{
+  background: var(--surface-2);
+}
+
 // ─── modal ───────────────────────────────────────────────
 .modal-content {
   border: 1px solid var(--border);

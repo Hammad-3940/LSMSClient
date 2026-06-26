@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, inject, OnInit, signal } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { MiscellaneousService } from '../../core/services/miscellaneous.service';
@@ -8,6 +8,7 @@ import { CommonService } from '../../shared/commonservice/common.service';
 import { Onlyletterdirective } from '../../shared/directives/onlyletterdirective';
 import { Phonenumberdirective } from '../../shared/directives/phonenumberdirective';
 import { PaginationComponent } from '../../shared/paginationcomponent/paginationcomponent';
+import { PhoneFormatPipe } from '../../shared/pipes/phone-format-pipe';
 
 export interface User {
   id: number;
@@ -21,11 +22,13 @@ export interface User {
 @Component({
   selector: 'app-usermanagement',
   imports: [CommonModule, FormsModule, ReactiveFormsModule, PaginationComponent, Onlyletterdirective, Phonenumberdirective],
+  providers: [PhoneFormatPipe],
   templateUrl: './usermanagement.html',
   styleUrl: './usermanagement.scss',
 })
 
 export class UserManagementComponent implements OnInit {
+  @ViewChild('userFirstName') userFirstName!: ElementRef<HTMLInputElement>;
   userRolesList = signal<any[]>([]);
   genderList = signal<any[]>([]);
   userStatusList = signal<any[]>([]);
@@ -52,7 +55,7 @@ export class UserManagementComponent implements OnInit {
   isEditing = signal(false);
   editingUser: Partial<User> = {};
 
-  constructor(private formbuilder: FormBuilder, private elementRef: ElementRef) { }
+  constructor(private formbuilder: FormBuilder, private elementRef: ElementRef, private phoneFormatPipe: PhoneFormatPipe) { }
 
   ngOnInit() {
     this.GetGender();
@@ -81,7 +84,7 @@ export class UserManagementComponent implements OnInit {
       middleName: new FormControl(''),
       lastName: new FormControl('', [Validators.required]),
       email: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{3,4}$/)]),
-      phoneNumber: new FormControl(''),
+      phoneNumber: new FormControl('', [Validators.required]),
       statusId: new FormControl(null),
       genderId: new FormControl(null),
       roleId: new FormControl(null, [Validators.required]),
@@ -166,15 +169,25 @@ export class UserManagementComponent implements OnInit {
   }
 
   openAddModal() {
+    setTimeout(() => {
+      this.userFirstName.nativeElement.focus();
+    }, 100);
     this.isEditing.set(false);
-    this.editingUser = { role: 'Viewer', status: 'Active' };
     this.showModal.set(true);
+    this.upsertUserFormGroup.get('email')?.enable();
   }
 
-  openEditModal(user: User) {
+  openEditModal(user: any) {
+    this.upsertUserFormGroup.patchValue(user);
+    this.upsertUserFormGroup.patchValue({
+      phoneNumber: this.phoneFormatPipe.transform(user.phoneNumber)
+    });
     this.isEditing.set(true);
-    this.editingUser = { ...user };
     this.showModal.set(true);
+    this.upsertUserFormGroup.get('email')?.disable();
+    setTimeout(() => {
+      this.userFirstName.nativeElement.focus();
+    }, 300);
   }
 
   RegisterUser() {
@@ -191,7 +204,12 @@ export class UserManagementComponent implements OnInit {
       return
     }
 
-    this.userManagementService.RegisterUser(this.upsertUserFormGroup.value)
+    const payload = {
+      ...this.upsertUserFormGroup.getRawValue(),
+      phoneNumber: this.upsertUserFormGroup.value.phoneNumber?.replace(/-/g, '')
+    };
+
+    this.userManagementService.RegisterUser(payload)
       .subscribe({
         next: (res) => {
           if (res.success) {
@@ -199,6 +217,34 @@ export class UserManagementComponent implements OnInit {
             this.showModal.set(false);
             this.GetUsersInformation(true);
             this.clearErrors();
+            this.upsertUserFormGroup.reset();
+          } else {
+            this.toastr.error(res.responseMessage);
+          }
+        }
+      });
+
+  }
+
+  UpdateUser() {
+    debugger
+    if (this.upsertUserFormGroup.invalid) {
+      this.upsertUserFormGroup.markAllAsTouched();
+      return;
+    }
+
+    const payload = {
+      ...this.upsertUserFormGroup.getRawValue(),
+      phoneNumber: this.upsertUserFormGroup.value.phoneNumber?.replace(/-/g, '')
+    };
+
+    this.userManagementService.UpdateUser(payload)
+      .subscribe({
+        next: (res) => {
+          if (res.success) {
+            this.toastr.success(res?.responseMessage);
+            this.showModal.set(false);
+            this.GetUsersInformation(true);
             this.upsertUserFormGroup.reset();
           } else {
             this.toastr.error(res.responseMessage);
